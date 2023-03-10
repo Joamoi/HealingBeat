@@ -22,7 +22,7 @@ public class Note : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        beatsShownInAdvance = BeatManager.instance.beatsShownInAdvance;
+        beatsShownInAdvance = BeatManager.beatInstance.beatsShownInAdvance;
         spawnPos = transform.position;
         removePos = transform.position + new Vector3(-travelDistance, 0f, 0f);
     }
@@ -31,26 +31,26 @@ public class Note : MonoBehaviour
     void Update()
     {
         // interpolates note position based on current song position, beat of the note and amount of beats shown in advance
-        transform.position = Vector3.Lerp(spawnPos, removePos, (beatsShownInAdvance - (beatOfThisNote - BeatManager.instance.songPosInBeats)) / beatsShownInAdvance);
+        transform.position = Vector3.Lerp(spawnPos, removePos, (beatsShownInAdvance - (beatOfThisNote - BeatManager.beatInstance.songPosInBeats)) / beatsShownInAdvance);
 
         // different distances to button give different accuracy
         if (canBePressed && (Input.GetKeyDown(keyToPress1) || Input.GetKeyDown(keyToPress2)))
         {
             if (Mathf.Abs(buttonPosX - transform.position.x) > 0.25f)
             {
-                BeatManager.instance.GoodHit();
+                BeatManager.beatInstance.GoodHit();
                 Destroy(gameObject);
             }
 
             else if (Mathf.Abs(buttonPosX - transform.position.x) < 0.1f)
             {
-                BeatManager.instance.PerfectHit();
+                BeatManager.beatInstance.PerfectHit();
                 Destroy(gameObject);
             }
 
             else
             {
-                BeatManager.instance.GreatHit();
+                BeatManager.beatInstance.GreatHit();
                 Destroy(gameObject);
             }
         }
@@ -70,7 +70,7 @@ public class Note : MonoBehaviour
 
         if (collision.tag == "Miss")
         {
-            BeatManager.instance.Miss();
+            BeatManager.beatInstance.Miss();
         }
     }
 

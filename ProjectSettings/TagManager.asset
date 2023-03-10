@@ -44,6 +44,3 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Notes
-    uniqueID: 1201145095
-    locked: 0

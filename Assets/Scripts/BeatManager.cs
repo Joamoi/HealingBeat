@@ -5,7 +5,7 @@ using TMPro;
 
 public class BeatManager : MonoBehaviour
 {
-    public static BeatManager instance;
+    public static BeatManager beatInstance;
 
     public float songBpm;
     private float secPerBeat;
@@ -21,8 +21,8 @@ public class BeatManager : MonoBehaviour
 
     public float noteSpawnPosX;
     public GameObject hitFlash;
-    public GameObject note1;
-    public GameObject note2;
+    public GameObject notePrefab1;
+    public GameObject notePrefab2;
     private GameObject[] colors = new GameObject[2];
 
     private bool notesMove = false;
@@ -49,11 +49,11 @@ public class BeatManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        instance = this;
+        beatInstance = this;
 
         CreateNotes();
 
-        colors[0] = note1; colors[1] = note2;
+        colors[0] = notePrefab1; colors[1] = notePrefab2;
         secPerBeat = 60f / songBpm;
         combo = 0;
 

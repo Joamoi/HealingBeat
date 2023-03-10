@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WalkManager : MonoBehaviour
 {
+    public static WalkManager walkInstance;
+
     public float songBpm;
     private float secPerBeat;
     private float songPosInSecs;
@@ -11,27 +13,34 @@ public class WalkManager : MonoBehaviour
     public float songPosInBeats;
     private float songStartTime;
     public AudioSource music;
+    private int nextBeat;
 
     public float beatDiffFix;
     public float pressDiffFix;
     public float rhythmThreshold;
     private float previousBeat;
-    public static bool musicPlaying = false;
+    public bool musicPlaying = false;
 
     public GameObject testIndicatorWhite;
     public GameObject testIndicatorGreen;
     public GameObject testIndicatorRed;
 
+    public GameObject lineHolder;
+    public GameObject linePrefab;
+    public float beatsShownInAdvance;
+
     // movement in this script is based on movepoint towards which the player will move
     public Transform movePoint;
     public float moveSpeed = 4f;
-    public static bool canMove = true;
+    public bool canMove = true;
 
     public LayerMask obstacles;
 
     // Start is called before the first frame update
     void Start()
     {
+        walkInstance = this;
+
         secPerBeat = 60f / songBpm;
         previousBeat = -1;
 
@@ -44,14 +53,34 @@ public class WalkManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // BEAT
+
         songPosInSecs = (float)(AudioSettings.dspTime - songStartTime);
         songPosInBeats = songPosInSecs / secPerBeat;
 
-        if((songPosInBeats - previousBeat) > (1 + beatDiffFix) && musicPlaying)
+        if ((songPosInBeats - previousBeat) > (1 + beatDiffFix) && musicPlaying)
         {
+            GameObject newLineLeft = Instantiate(linePrefab, lineHolder.transform);
+            newLineLeft.transform.position = new Vector3(-6f, -4f, 0f);
+
+            Line lineLeft = newLineLeft.GetComponent<Line>();
+            lineLeft.beatOfThisLine = previousBeat + beatsShownInAdvance + 1 + beatDiffFix;
+
+            GameObject newLineRight = Instantiate(linePrefab, lineHolder.transform);
+            newLineRight.transform.position = new Vector3(6f, -4f, 0f);
+
+            Line lineRight = newLineRight.GetComponent<Line>();
+            lineRight.beatOfThisLine = previousBeat + beatsShownInAdvance + 1 + beatDiffFix;
+
             previousBeat++;
-            StartCoroutine("TestIndicatorWhite");
+
+            if (previousBeat >= beatsShownInAdvance)
+            {
+                StartCoroutine("TestIndicatorWhite");
+            }
         } 
+
+        // MOVE
 
         // move player towards movepoint every frame
         transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
