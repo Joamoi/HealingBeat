@@ -1,0 +1,137 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class WalkManager : MonoBehaviour
+{
+    public float songBpm;
+    private float secPerBeat;
+    private float songPosInSecs;
+    [HideInInspector]
+    public float songPosInBeats;
+    private float songStartTime;
+    public AudioSource music;
+
+    public float beatDiffFix;
+    public float pressDiffFix;
+    public float rhythmThreshold;
+    private float previousBeat;
+    public static bool musicPlaying = false;
+
+    public GameObject testIndicatorWhite;
+    public GameObject testIndicatorGreen;
+    public GameObject testIndicatorRed;
+
+    // movement in this script is based on movepoint towards which the player will move
+    public Transform movePoint;
+    public float moveSpeed = 4f;
+    public static bool canMove = true;
+
+    public LayerMask obstacles;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        secPerBeat = 60f / songBpm;
+        previousBeat = -1;
+
+        StartCoroutine("StartMusic");
+
+        // remove parenting from movepoint so that it can move independently
+        movePoint.parent = null;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        songPosInSecs = (float)(AudioSettings.dspTime - songStartTime);
+        songPosInBeats = songPosInSecs / secPerBeat;
+
+        if((songPosInBeats - previousBeat) > (1 + beatDiffFix) && musicPlaying)
+        {
+            previousBeat++;
+            StartCoroutine("TestIndicatorWhite");
+        } 
+
+        // move player towards movepoint every frame
+        transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
+
+        float moveHori = Input.GetAxisRaw("Horizontal");
+        float moveVert = Input.GetAxisRaw("Vertical");
+
+        // check hori and vert movement separately to disable diagonal movement
+        if (Mathf.Abs(moveHori) == 1f && canMove)
+        {
+            Vector3 targetPos = transform.position + new Vector3(moveHori, 0f, 0f);
+            TryToMove(targetPos);
+        }
+        else if (Mathf.Abs(moveVert) == 1f && canMove)
+        {
+            Vector3 targetPos = transform.position + new Vector3(0f, 0f, moveVert);
+            TryToMove(targetPos);
+        }
+
+        // re-enable movement after releasing movement buttons
+        if(moveHori == 0f && moveVert == 0f)
+        {
+            canMove = true;
+        }
+    }
+
+    public void TryToMove(Vector3 targetPos)
+    {
+        // only move if player has reached the movepoint
+        if (Vector3.Distance(transform.position, movePoint.position) == 0f)
+        {
+            // only move if there are no obstacles
+            if (Physics.OverlapSphere(targetPos, .2f, obstacles).Length == 0)
+            {
+                movePoint.position = targetPos;
+                canMove = false;
+
+                // if songposinbeats is near whole number, player is on rhythm, if near half, player is not on rhythm
+                float songPosRounded = Mathf.Round(songPosInBeats + pressDiffFix);
+                if (Mathf.Abs((songPosInBeats + pressDiffFix) - songPosRounded) < rhythmThreshold)
+                {
+                    StartCoroutine("TestIndicatorGreen");
+                }
+
+                else
+                {
+                    StartCoroutine("TestIndicatorRed");
+                }
+            }
+        }
+    }
+
+    IEnumerator StartMusic()
+    {
+        yield return new WaitForSeconds(1f);
+
+        // record the time when the music starts
+        songStartTime = (float)AudioSettings.dspTime;
+        music.Play();
+        musicPlaying = true;
+    }
+
+    IEnumerator TestIndicatorWhite()
+    {
+        testIndicatorWhite.SetActive(true);
+        yield return new WaitForSeconds(0.01f);
+        testIndicatorWhite.SetActive(false);
+    }
+
+    IEnumerator TestIndicatorGreen()
+    {
+        testIndicatorGreen.SetActive(true);
+        yield return new WaitForSeconds(0.01f);
+        testIndicatorGreen.SetActive(false);
+    }
+
+    IEnumerator TestIndicatorRed()
+    {
+        testIndicatorRed.SetActive(true);
+        yield return new WaitForSeconds(0.01f);
+        testIndicatorRed.SetActive(false);
+    }
+}
