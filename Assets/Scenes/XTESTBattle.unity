@@ -2317,8 +2317,10 @@ MonoBehaviour:
   beatsShownInAdvance: 8
   noteSpawnPosX: 5
   hitFlash: {fileID: 339133032}
-  notePrefab1: {fileID: 0}
-  notePrefab2: {fileID: 0}
+  notePrefab1: {fileID: 640170177846006462, guid: 2d4b6c91cf12ab44e8b4f18bcc248124,
+    type: 3}
+  notePrefab2: {fileID: 3809524344914322122, guid: 126ea6ecfaa4a444294357cf951491d0,
+    type: 3}
   music: {fileID: 1920254929}
   noteHolder: {fileID: 1408511494}
   offsetInBeats: 1.5
