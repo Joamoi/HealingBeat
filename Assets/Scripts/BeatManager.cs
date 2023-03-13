@@ -46,6 +46,13 @@ public class BeatManager : MonoBehaviour
     private int perfectHits = 0;
     private int misses = 0;
 
+    public GameObject hpMask;
+    private float hp0PosX;
+    private float hp100PosX;
+    private float hp = 100f;
+    private float hpMax;
+    public float damagePerMiss;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,6 +63,9 @@ public class BeatManager : MonoBehaviour
         colors[0] = notePrefab1; colors[1] = notePrefab2;
         secPerBeat = 60f / songBpm;
         combo = 0;
+        hp100PosX = hpMask.transform.position.x;
+        hp0PosX = hp100PosX - 1.15f;
+        hpMax = hp;
 
         StartCoroutine("StartMusic");
     }
@@ -148,6 +158,8 @@ public class BeatManager : MonoBehaviour
         feedbackText.color = new Color(255, 0, 0);
         feedbackText.text = "Miss";
         comboText.text = "" + combo;
+
+        TakeDamage();
     }
 
     IEnumerator Flash()
@@ -166,5 +178,18 @@ public class BeatManager : MonoBehaviour
             notes.Add(beat);
             beat = beat + 2f;
         }
+    }
+
+    public void TakeDamage()
+    {
+        hp -= damagePerMiss;
+
+        if(hp <= 0)
+        {
+            hp = 0;
+        }
+
+        float newPosX = Mathf.Lerp(hp100PosX, hp0PosX, (hpMax - hp) / hpMax);
+        hpMask.transform.position = new Vector3(newPosX, hpMask.transform.position.y, hpMask.transform.position.z);
     }
 }
