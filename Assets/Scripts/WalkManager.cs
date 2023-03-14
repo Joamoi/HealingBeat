@@ -38,6 +38,13 @@ public class WalkManager : MonoBehaviour
     public LayerMask obstacles;
     public LayerMask enemies;
 
+    public GameObject hpMask;
+    private float hp0PosX;
+    private float hp100PosX;
+    private float hp = 100f;
+    private float hpMax;
+    public float damagePerMiss;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +52,9 @@ public class WalkManager : MonoBehaviour
 
         secPerBeat = 60f / songBpm;
         previousBeat = -1;
+        hp100PosX = hpMask.transform.position.x;
+        hp0PosX = hp100PosX - 1.15f;
+        hpMax = hp;
 
         StartCoroutine("StartMusic");
 
@@ -133,25 +143,48 @@ public class WalkManager : MonoBehaviour
                 }
             }
 
-            // attack if there are no obstacles but there is an enemy
-            else if (Physics.OverlapSphere(targetPos, .2f, obstacles).Length == 0 && !(Physics.OverlapSphere(targetPos, .2f, enemies).Length == 0))
+            else
             {
-                attackPoint.position = targetPos;
-                canMove = false;
+                Collider[] enemy = Physics.OverlapSphere(targetPos, .2f, enemies);
 
-                // if songposinbeats is near whole number, player is on rhythm, if near half, player is not on rhythm
-                float songPosRounded = Mathf.Round(songPosInBeats + pressDiffFix);
-                if (Mathf.Abs((songPosInBeats + pressDiffFix) - songPosRounded) < rhythmThreshold)
+                // attack if there is an enemy
+                if (enemy.Length > 0)
                 {
-                    //dodamage, get worldmob component and call function
-                }
+                    attackPoint.position = targetPos;
+                    canMove = false;
 
-                else
-                {
-                    //takedamage, copy hpbar from battle and call function
+                    // if songposinbeats is near whole number, player is on rhythm, if near half, player is not on rhythm
+                    float songPosRounded = Mathf.Round(songPosInBeats + pressDiffFix);
+                    if (Mathf.Abs((songPosInBeats + pressDiffFix) - songPosRounded) < rhythmThreshold)
+                    {
+                        WorldNpc npc = enemy[0].gameObject.GetComponent<WorldNpc>();
+                        npc.TakeDamage();
+
+                        StartCoroutine("TestIndicatorGreen");
+                    }
+
+                    else
+                    {
+                        TakeDamage();
+
+                        StartCoroutine("TestIndicatorRed");
+                    }
                 }
             }
         }
+    }
+
+    public void TakeDamage()
+    {
+        hp -= damagePerMiss;
+
+        if (hp <= 0)
+        {
+            hp = 0;
+        }
+
+        float newPosX = Mathf.Lerp(hp100PosX, hp0PosX, (hpMax - hp) / hpMax);
+        hpMask.transform.position = new Vector3(newPosX, hpMask.transform.position.y, hpMask.transform.position.z);
     }
 
     IEnumerator StartMusic()
