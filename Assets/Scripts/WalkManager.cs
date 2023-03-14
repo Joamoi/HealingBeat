@@ -31,10 +31,12 @@ public class WalkManager : MonoBehaviour
 
     // movement in this script is based on movepoint towards which the player will move
     public Transform movePoint;
+    public Transform attackPoint;
     public float moveSpeed = 4f;
     public bool canMove = true;
 
     public LayerMask obstacles;
+    public LayerMask enemies;
 
     // Start is called before the first frame update
     void Start()
@@ -112,8 +114,8 @@ public class WalkManager : MonoBehaviour
         // only move if player has reached the movepoint
         if (Vector3.Distance(transform.position, movePoint.position) == 0f)
         {
-            // only move if there are no obstacles
-            if (Physics.OverlapSphere(targetPos, .2f, obstacles).Length == 0)
+            // only move if there are no obstacles or enemies
+            if (Physics.OverlapSphere(targetPos, .2f, obstacles).Length == 0 && Physics.OverlapSphere(targetPos, .2f, enemies).Length == 0)
             {
                 movePoint.position = targetPos;
                 canMove = false;
@@ -128,6 +130,25 @@ public class WalkManager : MonoBehaviour
                 else
                 {
                     StartCoroutine("TestIndicatorRed");
+                }
+            }
+
+            // attack if there are no obstacles but there is an enemy
+            else if (Physics.OverlapSphere(targetPos, .2f, obstacles).Length == 0 && !(Physics.OverlapSphere(targetPos, .2f, enemies).Length == 0))
+            {
+                attackPoint.position = targetPos;
+                canMove = false;
+
+                // if songposinbeats is near whole number, player is on rhythm, if near half, player is not on rhythm
+                float songPosRounded = Mathf.Round(songPosInBeats + pressDiffFix);
+                if (Mathf.Abs((songPosInBeats + pressDiffFix) - songPosRounded) < rhythmThreshold)
+                {
+                    //dodamage, get worldmob component and call function
+                }
+
+                else
+                {
+                    //takedamage, copy hpbar from battle and call function
                 }
             }
         }
