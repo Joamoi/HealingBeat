@@ -45,6 +45,8 @@ public class WalkManager : MonoBehaviour
     private float hpMax;
     public float damagePerMiss;
 
+    private List<Light> lights = new List<Light>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -55,6 +57,13 @@ public class WalkManager : MonoBehaviour
         hp100PosX = hpMask.transform.position.x;
         hp0PosX = hp100PosX - 1.15f;
         hpMax = hp;
+
+        GameObject[] lightObjects = GameObject.FindGameObjectsWithTag("Light");
+        
+        for (int i = 0; i < lightObjects.Length; i++)
+        {
+            lights.Add(lightObjects[i].GetComponent<Light>());
+        }
 
         StartCoroutine("StartMusic");
 
@@ -135,6 +144,11 @@ public class WalkManager : MonoBehaviour
                 if (Mathf.Abs((songPosInBeats + pressDiffFix) - songPosRounded) < rhythmThreshold)
                 {
                     StartCoroutine("TestIndicatorGreen");
+
+                    for (int i = 0; i < lights.Count; i++)
+                    {
+                        StartCoroutine("LightIntensify", lights[i]);
+                    }
                 }
 
                 else
@@ -216,5 +230,13 @@ public class WalkManager : MonoBehaviour
         testIndicatorRed.SetActive(true);
         yield return new WaitForSeconds(0.01f);
         testIndicatorRed.SetActive(false);
+    }
+
+    IEnumerator LightIntensify(Light light)
+    {
+        float originalIntensity = light.intensity;
+        light.intensity = 3 * originalIntensity;
+        yield return new WaitForSeconds(0.1f);
+        light.intensity = originalIntensity;
     }
 }

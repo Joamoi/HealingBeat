@@ -7,6 +7,7 @@ TagManager:
   - DestroyPos
   - Button
   - Miss
+  - Light
   layers:
   - Default
   - TransparentFX
