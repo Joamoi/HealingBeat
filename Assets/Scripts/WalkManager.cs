@@ -13,7 +13,6 @@ public class WalkManager : MonoBehaviour
     public float songPosInBeats;
     private float songStartTime;
     public AudioSource music;
-    private int nextBeat;
 
     public float beatDiffFix;
     public float pressDiffFix;
@@ -28,6 +27,7 @@ public class WalkManager : MonoBehaviour
     public GameObject lineHolder;
     public GameObject linePrefab;
     public float beatsShownInAdvance;
+    private float lineInterval = 1f;
 
     // movement in this script is based on movepoint towards which the player will move
     public Transform movePoint;
@@ -46,6 +46,10 @@ public class WalkManager : MonoBehaviour
     public float damagePerMiss;
 
     private List<Light> lights = new List<Light>();
+    public float lightMultiplier = 4f;
+    public float lightDuration = 0.1f;
+    private float typeMultiplier = 1f;
+    public float dirLightMultiplier = 0.2f;
 
     // Start is called before the first frame update
     void Start()
@@ -79,7 +83,20 @@ public class WalkManager : MonoBehaviour
         songPosInSecs = (float)(AudioSettings.dspTime - songStartTime);
         songPosInBeats = songPosInSecs / secPerBeat;
 
-        if ((songPosInBeats - previousBeat) > (1 + beatDiffFix) && musicPlaying)
+        if (Physics.OverlapBox(transform.position, new Vector3(1.2f, 1.2f, 1.2f), Quaternion.identity, enemies).Length > 0)
+        {
+            if (lineInterval == 1f)
+            {
+                lineInterval = 0.5f;
+            }
+        }
+
+        else
+        {
+            lineInterval = 1f;
+        }
+
+        if ((songPosInBeats - previousBeat) > (lineInterval + beatDiffFix) && musicPlaying)
         {
             GameObject newLineLeft = Instantiate(linePrefab, lineHolder.transform);
             newLineLeft.transform.position = new Vector3(-6f, -4f, 0f);
@@ -167,7 +184,7 @@ public class WalkManager : MonoBehaviour
                     attackPoint.position = targetPos;
                     canMove = false;
 
-                    // if songposinbeats is near whole number, player is on rhythm, if near half, player is not on rhythm
+                    // if songposinbeats is near half number, player is on rhythm, if not, player is not on rhythm
                     float songPosRounded = Mathf.Round(songPosInBeats + pressDiffFix);
                     if (Mathf.Abs((songPosInBeats + pressDiffFix) - songPosRounded) < rhythmThreshold)
                     {
@@ -234,9 +251,23 @@ public class WalkManager : MonoBehaviour
 
     IEnumerator LightIntensify(Light light)
     {
+        if (light.type == LightType.Directional)
+        {
+            typeMultiplier = dirLightMultiplier;
+        }
+
+        else
+        {
+            typeMultiplier = 1f;
+        }
+
         float originalIntensity = light.intensity;
-        light.intensity = 3 * originalIntensity;
-        yield return new WaitForSeconds(0.1f);
+        light.intensity = originalIntensity + 0.5f * typeMultiplier * lightMultiplier * originalIntensity;
+        yield return new WaitForSeconds(lightDuration / 3f);
+        light.intensity = originalIntensity + typeMultiplier * lightMultiplier * originalIntensity;
+        yield return new WaitForSeconds(lightDuration / 3f);
+        light.intensity = originalIntensity + 0.5f * typeMultiplier * lightMultiplier * originalIntensity;
+        yield return new WaitForSeconds(lightDuration / 3f);
         light.intensity = originalIntensity;
     }
 }
