@@ -80,7 +80,7 @@ public class BeatManager : MonoBehaviour
         if (notesMove)
         {
             // spawn next note in advance so that it gets to the button on time
-            if (nextIndex < notes.Count && notes[nextIndex] < songPosInBeats + beatsShownInAdvance)
+            if (nextIndex < notes.Count && notes[nextIndex] <= songPosInBeats + beatsShownInAdvance)
             {
                 colorIndex = Random.Range(0, 2);
 

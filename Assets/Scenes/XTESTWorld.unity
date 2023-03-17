@@ -7006,16 +7006,13 @@ MonoBehaviour:
   songPosInBeats: 0
   music: {fileID: 2008727512}
   beatDiffFix: 0.2
-  pressDiffFix: -0.2
   rhythmThreshold: 0.2
   musicPlaying: 0
   testIndicatorWhite: {fileID: 1053207799}
-  testIndicatorGreen: {fileID: 90501787}
-  testIndicatorRed: {fileID: 393124895}
   lineHolder: {fileID: 1318796643}
   linePrefab: {fileID: 6578536906863818218, guid: 7e19ff0b49b6f9f46b1f009956d220ae,
     type: 3}
-  beatsShownInAdvance: 5
+  beatsShownInAdvance: 4
   movePoint: {fileID: 1861163985}
   attackPoint: {fileID: 481662198}
   moveSpeed: 10
@@ -7029,9 +7026,9 @@ MonoBehaviour:
   hpMask: {fileID: 772925113}
   damagePerMiss: 10
   volume: {fileID: 832575518}
-  lightMultiplier: 0
-  bloomThreshold: 0
-  postExposure: 0
+  lightMultiplier: 2
+  bloomThreshold: 0.1
+  postExposure: 0.1
   lightDuration: 0.15
 --- !u!82 &2008727512
 AudioSource:
@@ -7043,7 +7040,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: ded93f6ba1ec14d438cf45ab85456ed8, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 3093cb1b7553edc49a2af2923a8372b3, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.2
   m_Pitch: 1

@@ -18,14 +18,11 @@ public class WalkManager : MonoBehaviour
     public AudioSource music;
 
     public float beatDiffFix;
-    public float pressDiffFix;
     public float rhythmThreshold;
     private float previousBeat;
     public bool musicPlaying = false;
 
     public GameObject testIndicatorWhite;
-    public GameObject testIndicatorGreen;
-    public GameObject testIndicatorRed;
 
     public GameObject lineHolder;
     public GameObject linePrefab;
@@ -102,21 +99,26 @@ public class WalkManager : MonoBehaviour
             lineInterval = 1f;
         }
 
-        if ((songPosInBeats - previousBeat) > (lineInterval + beatDiffFix) && musicPlaying)
+        if ((songPosInBeats - previousBeat) >= (lineInterval + beatDiffFix) && musicPlaying)
         {
             GameObject newLineLeft = Instantiate(linePrefab, lineHolder.transform);
             newLineLeft.transform.position = new Vector3(-6f, -4f, 0f);
 
             Line lineLeft = newLineLeft.GetComponent<Line>();
-            lineLeft.beatOfThisLine = previousBeat + beatsShownInAdvance + 1 + beatDiffFix;
+            lineLeft.beatOfThisLine = previousBeat + beatsShownInAdvance + lineInterval + beatDiffFix;
 
             GameObject newLineRight = Instantiate(linePrefab, lineHolder.transform);
             newLineRight.transform.position = new Vector3(6f, -4f, 0f);
 
             Line lineRight = newLineRight.GetComponent<Line>();
-            lineRight.beatOfThisLine = previousBeat + beatsShownInAdvance + 1 + beatDiffFix;
+            lineRight.beatOfThisLine = previousBeat + beatsShownInAdvance + lineInterval + beatDiffFix;
 
-            previousBeat++;
+            previousBeat = previousBeat + lineInterval;
+
+            if (previousBeat - Mathf.Round(previousBeat) != 0f && lineInterval == 1f)
+            {
+                previousBeat = previousBeat - 0.5f;
+            }
 
             if (previousBeat >= beatsShownInAdvance)
             {
@@ -163,20 +165,13 @@ public class WalkManager : MonoBehaviour
                 canMove = false;
 
                 // if songposinbeats is near whole number, player is on rhythm, if near half, player is not on rhythm
-                float songPosRounded = Mathf.Round(songPosInBeats + pressDiffFix);
-                if (Mathf.Abs((songPosInBeats + pressDiffFix) - songPosRounded) < rhythmThreshold)
+                float songPosRounded = Mathf.Round(songPosInBeats - beatDiffFix);
+                if (Mathf.Abs((songPosInBeats - beatDiffFix) - songPosRounded) < rhythmThreshold)
                 {
-                    StartCoroutine("TestIndicatorGreen");
-
                     for (int i = 0; i < lights.Count; i++)
                     {
                         StartCoroutine("LightIntensify", lights[i]);
                     }
-                }
-
-                else
-                {
-                    StartCoroutine("TestIndicatorRed");
                 }
             }
 
@@ -191,20 +186,16 @@ public class WalkManager : MonoBehaviour
                     canMove = false;
 
                     // if songposinbeats is near half number, player is on rhythm, if not, player is not on rhythm
-                    float songPosRounded = Mathf.Round(songPosInBeats + pressDiffFix);
-                    if (Mathf.Abs((songPosInBeats + pressDiffFix) - songPosRounded) < rhythmThreshold)
+                    float songPosRounded = Mathf.Round(2 * (songPosInBeats - beatDiffFix));
+                    if (Mathf.Abs(2 * (songPosInBeats - beatDiffFix) - songPosRounded) < (2 * rhythmThreshold))
                     {
+                        for (int i = 0; i < lights.Count; i++)
+                        {
+                            StartCoroutine("LightIntensify", lights[i]);
+                        }
+
                         WorldNpc npc = enemy[0].gameObject.GetComponent<WorldNpc>();
                         npc.TakeDamage();
-
-                        StartCoroutine("TestIndicatorGreen");
-                    }
-
-                    else
-                    {
-                        TakeDamage();
-
-                        StartCoroutine("TestIndicatorRed");
                     }
                 }
             }
@@ -237,22 +228,8 @@ public class WalkManager : MonoBehaviour
     IEnumerator TestIndicatorWhite()
     {
         testIndicatorWhite.SetActive(true);
-        yield return new WaitForSeconds(0.01f);
+        yield return new WaitForSeconds(0.02f);
         testIndicatorWhite.SetActive(false);
-    }
-
-    IEnumerator TestIndicatorGreen()
-    {
-        testIndicatorGreen.SetActive(true);
-        yield return new WaitForSeconds(0.01f);
-        testIndicatorGreen.SetActive(false);
-    }
-
-    IEnumerator TestIndicatorRed()
-    {
-        testIndicatorRed.SetActive(true);
-        yield return new WaitForSeconds(0.01f);
-        testIndicatorRed.SetActive(false);
     }
 
     IEnumerator LightIntensify(Light light)
