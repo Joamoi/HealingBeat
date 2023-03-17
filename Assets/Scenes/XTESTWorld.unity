@@ -1296,7 +1296,7 @@ GameObject:
   - component: {fileID: 410087042}
   m_Layer: 0
   m_Name: Directional Light
-  m_TagString: Light
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7028,9 +7028,11 @@ MonoBehaviour:
     m_Bits: 256
   hpMask: {fileID: 772925113}
   damagePerMiss: 10
-  lightMultiplier: 4
+  volume: {fileID: 832575518}
+  lightMultiplier: 0
+  bloomThreshold: 0
+  postExposure: 0
   lightDuration: 0.15
-  dirLightMultiplier: 0
 --- !u!82 &2008727512
 AudioSource:
   m_ObjectHideFlags: 0

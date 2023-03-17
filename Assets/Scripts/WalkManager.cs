@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering.RendererUtils;
 
 public class WalkManager : MonoBehaviour
 {
@@ -45,11 +48,14 @@ public class WalkManager : MonoBehaviour
     private float hpMax;
     public float damagePerMiss;
 
+    public Volume volume;
+    private Bloom bloom;
+    private ColorAdjustments colorAdj;
     private List<Light> lights = new List<Light>();
-    public float lightMultiplier = 4f;
-    public float lightDuration = 0.1f;
-    private float typeMultiplier = 1f;
-    public float dirLightMultiplier = 0.2f;
+    public float lightMultiplier;
+    public float bloomThreshold;
+    public float postExposure;
+    public float lightDuration = 0.15f;
 
     // Start is called before the first frame update
     void Start()
@@ -251,23 +257,34 @@ public class WalkManager : MonoBehaviour
 
     IEnumerator LightIntensify(Light light)
     {
-        if (light.type == LightType.Directional)
-        {
-            typeMultiplier = dirLightMultiplier;
-        }
+        volume.profile.TryGet<Bloom>(out bloom);
+        volume.profile.TryGet<ColorAdjustments>(out colorAdj);
 
-        else
-        {
-            typeMultiplier = 1f;
-        }
-
+        float originalBloomThresh = bloom.threshold.value;
+        float originalPostExpo = colorAdj.postExposure.value;
         float originalIntensity = light.intensity;
-        light.intensity = originalIntensity + 0.5f * typeMultiplier * lightMultiplier * originalIntensity;
+
+        bloom.threshold.value -= 0.5f * bloomThreshold;
+        colorAdj.postExposure.value += 0.5f * postExposure;
+        light.intensity += 0.5f * lightMultiplier * originalIntensity;
+
         yield return new WaitForSeconds(lightDuration / 3f);
-        light.intensity = originalIntensity + typeMultiplier * lightMultiplier * originalIntensity;
+
+        bloom.threshold.value -= 0.5f * bloomThreshold;
+        colorAdj.postExposure.value += 0.5f * postExposure;
+        light.intensity += 0.5f * lightMultiplier * originalIntensity;
+
         yield return new WaitForSeconds(lightDuration / 3f);
-        light.intensity = originalIntensity + 0.5f * typeMultiplier * lightMultiplier * originalIntensity;
+
+        bloom.threshold.value += 0.5f * bloomThreshold;
+        colorAdj.postExposure.value -= 0.5f * postExposure;
+        light.intensity -= 0.5f * lightMultiplier * originalIntensity;
+
         yield return new WaitForSeconds(lightDuration / 3f);
-        light.intensity = originalIntensity;
+
+        bloom.threshold.value += 0.5f * bloomThreshold;
+        colorAdj.postExposure.value -= 0.5f * postExposure;
+        light.intensity -= 0.5f * lightMultiplier * originalIntensity;
+
     }
 }
