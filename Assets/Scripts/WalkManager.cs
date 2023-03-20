@@ -27,7 +27,13 @@ public class WalkManager : MonoBehaviour
     public GameObject lineHolder;
     public GameObject linePrefab;
     public float beatsShownInAdvance;
-    private float lineInterval = 1f;
+    private float lineInterval = 0.5f;
+    [HideInInspector]
+    public bool battleOn = false;
+    private bool halfBeat = true;
+    public SpriteRenderer lineBar;
+    private Color lineBarOriginalColor;
+    public Color lineBarBattleColor;
 
     // movement in this script is based on movepoint towards which the player will move
     public Transform movePoint;
@@ -64,6 +70,7 @@ public class WalkManager : MonoBehaviour
         hp100PosX = hpMask.transform.position.x;
         hp0PosX = hp100PosX - 1.15f;
         hpMax = hp;
+        lineBarOriginalColor = lineBar.color;
 
         GameObject[] lightObjects = GameObject.FindGameObjectsWithTag("Light");
         
@@ -88,15 +95,14 @@ public class WalkManager : MonoBehaviour
 
         if (Physics.OverlapBox(transform.position, new Vector3(1.2f, 1.2f, 1.2f), Quaternion.identity, enemies).Length > 0)
         {
-            if (lineInterval == 1f)
-            {
-                lineInterval = 0.5f;
-            }
+            battleOn = true;
+            lineBar.color = lineBarBattleColor;
         }
 
         else
         {
-            lineInterval = 1f;
+            battleOn = false;
+            lineBar.color = lineBarOriginalColor;
         }
 
         if ((songPosInBeats - previousBeat) >= (lineInterval + beatDiffFix) && musicPlaying)
@@ -106,24 +112,24 @@ public class WalkManager : MonoBehaviour
 
             Line lineLeft = newLineLeft.GetComponent<Line>();
             lineLeft.beatOfThisLine = previousBeat + beatsShownInAdvance + lineInterval + beatDiffFix;
+            lineLeft.halfBeat = halfBeat;
 
             GameObject newLineRight = Instantiate(linePrefab, lineHolder.transform);
             newLineRight.transform.position = new Vector3(6f, -4f, 0f);
 
             Line lineRight = newLineRight.GetComponent<Line>();
             lineRight.beatOfThisLine = previousBeat + beatsShownInAdvance + lineInterval + beatDiffFix;
+            lineRight.halfBeat = halfBeat;
 
-            previousBeat = previousBeat + lineInterval;
-
-            if (previousBeat - Mathf.Round(previousBeat) != 0f && lineInterval == 1f)
+            if ((!halfBeat || (halfBeat && battleOn)) && songPosInBeats > beatsShownInAdvance)
             {
-                previousBeat = previousBeat - 0.5f;
+                StartCoroutine("LineBarFlash");
             }
 
-            if (previousBeat >= beatsShownInAdvance)
-            {
-                StartCoroutine("TestIndicatorWhite");
-            }
+                previousBeat = previousBeat + lineInterval;
+            halfBeat = !halfBeat;
+
+            
         } 
 
         // MOVE
@@ -166,7 +172,8 @@ public class WalkManager : MonoBehaviour
 
                 // if songposinbeats is near whole number, player is on rhythm, if near half, player is not on rhythm
                 float songPosRounded = Mathf.Round(songPosInBeats - beatDiffFix);
-                if (Mathf.Abs((songPosInBeats - beatDiffFix) - songPosRounded) < rhythmThreshold)
+                float inaccuracy = Mathf.Abs((songPosInBeats - beatDiffFix) - songPosRounded);
+                if (inaccuracy < rhythmThreshold)
                 {
                     for (int i = 0; i < lights.Count; i++)
                     {
@@ -186,8 +193,9 @@ public class WalkManager : MonoBehaviour
                     canMove = false;
 
                     // if songposinbeats is near half number, player is on rhythm, if not, player is not on rhythm
-                    float songPosRounded = Mathf.Round(2 * (songPosInBeats - beatDiffFix));
-                    if (Mathf.Abs(2 * (songPosInBeats - beatDiffFix) - songPosRounded) < (2 * rhythmThreshold))
+                    float songPosRounded = Mathf.Round(songPosInBeats - beatDiffFix);
+                    float inaccuracy = Mathf.Abs((songPosInBeats - beatDiffFix) - songPosRounded);
+                    if (inaccuracy < rhythmThreshold || inaccuracy > (0.5f - rhythmThreshold))
                     {
                         for (int i = 0; i < lights.Count; i++)
                         {
@@ -225,7 +233,7 @@ public class WalkManager : MonoBehaviour
         musicPlaying = true;
     }
 
-    IEnumerator TestIndicatorWhite()
+    IEnumerator LineBarFlash()
     {
         testIndicatorWhite.SetActive(true);
         yield return new WaitForSeconds(0.02f);

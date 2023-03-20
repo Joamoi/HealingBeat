@@ -16,7 +16,9 @@ public class BeatManager : MonoBehaviour
 
     public float beatsShownInAdvance;
     private List<float> notes = new List<float>();
+    private List<float> smashNotes = new List<float>();
     private int nextIndex = 0;
+    private int nextSmashIndex = 0;
     private int colorIndex;
 
     public float noteSpawnPosX;
@@ -24,6 +26,8 @@ public class BeatManager : MonoBehaviour
     public GameObject notePrefab1;
     public GameObject notePrefab2;
     private GameObject[] colors = new GameObject[2];
+    public GameObject smashNotePrefab;
+    public float smashHitsNeeded = 50f;
 
     private bool notesMove = false;
     public AudioSource music;
@@ -40,10 +44,12 @@ public class BeatManager : MonoBehaviour
     public int pointsPerGoodHit = 100;
     public int pointsPerGreatHit = 200;
     public int pointsPerPerfectHit = 300;
+    public int pointsPerSmashHit = 50;
 
     private int goodHits = 0;
     private int greatHits = 0;
     private int perfectHits = 0;
+    private int smashHits = 0;
     private int misses = 0;
 
     public GameObject hpMask;
@@ -51,7 +57,8 @@ public class BeatManager : MonoBehaviour
     private float hp100PosX;
     private float hp = 100f;
     private float hpMax;
-    public float damagePerMiss;
+    public float damagePerMiss = 10f;
+    public float damagePerFail = 30f;
 
     // Start is called before the first frame update
     void Start()
@@ -91,6 +98,19 @@ public class BeatManager : MonoBehaviour
                 note.beatOfThisNote = notes[nextIndex];
 
                 nextIndex++;
+            }
+
+            // start new smashnote, next one ends it
+            if (nextSmashIndex < smashNotes.Count && smashNotes[nextSmashIndex] <= songPosInBeats + beatsShownInAdvance)
+            {
+                GameObject newSmashNote = Instantiate(smashNotePrefab, noteHolder.transform);
+                newSmashNote.transform.position = new Vector3(noteSpawnPosX, 0f, 0f);
+
+                SmashNote smashNote = newSmashNote.GetComponent<SmashNote>();
+                smashNote.beatOfThisNote = smashNotes[nextSmashIndex];
+                smashNote.hitsNeeded = smashHitsNeeded;
+
+                nextSmashIndex++;
             }
         }
     }
@@ -159,7 +179,30 @@ public class BeatManager : MonoBehaviour
         feedbackText.text = "Miss";
         comboText.text = "" + combo;
 
-        TakeDamage();
+        TakeDamage(damagePerMiss);
+    }
+
+    public void SmashHit()
+    {
+        points += pointsPerSmashHit;
+        smashHits++;
+        StartCoroutine("Flash");
+
+        pointsText.text = "" + points.ToString();
+        feedbackText.color = new Color(0, 255, 0);
+        feedbackText.text = "SMASH";
+    }
+
+    public void SmashFail()
+    {
+        combo = 0;
+        misses++;
+
+        feedbackText.color = new Color(255, 0, 0);
+        feedbackText.text = "Fail";
+        comboText.text = "" + combo;
+
+        TakeDamage(damagePerFail);
     }
 
     IEnumerator Flash()
@@ -173,16 +216,54 @@ public class BeatManager : MonoBehaviour
     {
         float beat = beatsShownInAdvance + offsetInBeats;
 
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < 11; i++)
         {
-            notes.Add(beat);
-            beat = beat + 2f;
+            int noteOrNot = Random.Range(0, 4);
+
+            if (noteOrNot != 0)
+            {
+                notes.Add(beat);
+            }
+            
+            beat++;
+        }
+
+        beat++;
+        smashNotes.Add(beat);
+        beat = beat + 9;
+
+        for (int i = 0; i < 14; i++)
+        {
+            int noteOrNot = Random.Range(0, 4);
+
+            if (noteOrNot != 0)
+            {
+                notes.Add(beat);
+            }
+
+            beat++;
+        }
+
+        beat++;
+        smashNotes.Add(beat);
+        beat = beat + 9;
+
+        for (int i = 0; i < 14; i++)
+        {
+            int noteOrNot = Random.Range(0, 4);
+
+            if (noteOrNot != 0)
+            {
+                notes.Add(beat);
+            }
+
+            beat++;
         }
     }
 
-    public void TakeDamage()
+    public void TakeDamage(float damage)
     {
-        hp -= damagePerMiss;
+        hp -= damage;
 
         if(hp <= 0)
         {

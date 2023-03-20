@@ -34,7 +34,7 @@ public class Note : MonoBehaviour
         transform.position = Vector3.Lerp(spawnPos, removePos, (beatsShownInAdvance - (beatOfThisNote - BeatManager.beatInstance.songPosInBeats)) / beatsShownInAdvance);
 
         // different distances to button give different accuracy
-        if (canBePressed && (Input.GetKeyDown(keyToPress1) || Input.GetKeyDown(keyToPress2)))
+        if (canBePressed && (Input.GetKeyDown(keyToPress1) || Input.GetKeyDown(keyToPress2) || Input.GetKeyDown(keyToPress3) || Input.GetKeyDown(keyToPress4)))
         {
             if (Mathf.Abs(buttonPosX - transform.position.x) > 0.25f)
             {

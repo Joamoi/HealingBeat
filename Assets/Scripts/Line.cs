@@ -10,6 +10,8 @@ public class Line : MonoBehaviour
     private float beatsShownInAdvance;
     [HideInInspector]
     public float beatOfThisLine;
+    [HideInInspector]
+    public bool halfBeat = false;
 
     // Start is called before the first frame update
     void Start()
@@ -17,7 +19,7 @@ public class Line : MonoBehaviour
         beatsShownInAdvance = WalkManager.walkInstance.beatsShownInAdvance;
         spawnPos = transform.position;
         dir = new Vector3(0f, -4f, 0f) - transform.position;
-        removePos = new Vector3(0f, -4f, 0f) - 0.005f * dir;
+        removePos = new Vector3(0f, -4f, 0f) - 0.000f * dir;
     }
 
     // Update is called once per frame
@@ -29,6 +31,11 @@ public class Line : MonoBehaviour
         if (transform.position == removePos)
         {
             Destroy(gameObject);
+        }
+
+        if (halfBeat)
+        {
+            gameObject.GetComponent<SpriteRenderer>().enabled = WalkManager.walkInstance.battleOn;
         }
     }
 }

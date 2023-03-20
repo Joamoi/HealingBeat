@@ -6,6 +6,7 @@ public class WorldNpc : MonoBehaviour
 {
     public float hp = 100f;
     public float damageTakenPerHit = 7f;
+    public GameObject testCloud;
 
     public void TakeDamage()
     {
@@ -14,7 +15,8 @@ public class WorldNpc : MonoBehaviour
         if (hp <= 0)
         {
             hp = 0;
-            gameObject.SetActive(false);
+            testCloud.SetActive(false);
+            gameObject.layer = LayerMask.NameToLayer("Obstacles");
         }
     }
 }

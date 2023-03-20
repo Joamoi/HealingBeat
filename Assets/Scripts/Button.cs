@@ -7,16 +7,10 @@ public class Button : MonoBehaviour
     public GameObject sprite1;
     public GameObject sprite2;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
-        // could be simpler, getaxis doesn't work because we need both buttons at the same time
+        // could be simpler, getAxis doesn't work if we need both buttons at the same time
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             sprite1.SetActive(true);
