@@ -26,10 +26,10 @@ public class SmashNote : MonoBehaviour
 
     public GameObject noteEnd;
     public SpriteRenderer lineSprite;
+    public Sprite completedSprite;
     [HideInInspector]
     public float hitsNeeded;
     private float hitsDone = 0f;
-    public Color smashPassColor;
     private bool hitCheckDone = false;
 
     // Start is called before the first frame update
@@ -59,18 +59,13 @@ public class SmashNote : MonoBehaviour
         {
             BeatManager.beatInstance.SmashHit();
             hitsDone++;
-            Debug.Log(hitsDone);
 
         }
 
         if (hitsDone >= hitsNeeded)
         {
-            lineSprite.color = smashPassColor;
+            lineSprite.sprite = completedSprite;
         }
-
-        //float green = 255f - (Mathf.Clamp(hitsDone, 0f, hitsNeeded) / hitsNeeded) * 255f;
-        //float blue = (Mathf.Clamp(hitsDone, 0f, hitsNeeded) / hitsNeeded) * 255f;
-        //lineSprite.color = new Color(0f, green, blue, 150f);
 
         if (noteEnd.transform.position.x - (buttonPosX - 0.6f) <= 0 && !hitCheckDone)
         {

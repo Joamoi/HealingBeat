@@ -40,6 +40,7 @@ public class WalkManager : MonoBehaviour
     public Transform attackPoint;
     public float moveSpeed = 4f;
     public bool canMove = true;
+    private int walkCombo = 0;
 
     public LayerMask obstacles;
     public LayerMask enemies;
@@ -175,10 +176,17 @@ public class WalkManager : MonoBehaviour
                 float inaccuracy = Mathf.Abs((songPosInBeats - beatDiffFix) - songPosRounded);
                 if (inaccuracy < rhythmThreshold)
                 {
+                    walkCombo++;
+
                     for (int i = 0; i < lights.Count; i++)
                     {
                         StartCoroutine("LightIntensify", lights[i]);
                     }
+                }
+
+                else
+                {
+                    walkCombo = 0;
                 }
             }
 
