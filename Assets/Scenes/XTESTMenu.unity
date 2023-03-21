@@ -842,17 +842,17 @@ MonoBehaviour:
   m_FillRect: {fileID: 666899179}
   m_HandleRect: {fileID: 1675519637}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1658745513}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
         m_MethodName: SetEffectsVolume
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1473,17 +1473,17 @@ MonoBehaviour:
   m_FillRect: {fileID: 1595523364}
   m_HandleRect: {fileID: 797282422}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1658745513}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
         m_MethodName: SetMusicVolume
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2128,6 +2128,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainMenuButtons: {fileID: 1100826153}
   settingsButtons: {fileID: 702557942}
+  audioMixer: {fileID: 24100000, guid: 56d67741b81d6494f82bcc3b71d32b66, type: 2}
+  musicSlider: {fileID: 1147003555}
+  effectsSlider: {fileID: 220283776}
+  testEffectSound: {fileID: 0}
 --- !u!1 &1675519636
 GameObject:
   m_ObjectHideFlags: 0
