@@ -16,6 +16,7 @@ public class WalkManager : MonoBehaviour
     public float songPosInBeats;
     private float songStartTime;
     public AudioSource music;
+    private float songPosRounded = 0f;
 
     public float beatDiffFix;
     public float rhythmThreshold;
@@ -171,8 +172,16 @@ public class WalkManager : MonoBehaviour
                 movePoint.position = targetPos;
                 canMove = false;
 
+                
+                float oldSongPosRounded = songPosRounded;
+                songPosRounded = Mathf.Round(songPosInBeats - beatDiffFix);
+
+                if (songPosRounded - oldSongPosRounded > (1 + 2 * rhythmThreshold))
+                {
+                    walkCombo = 0;
+                }
+
                 // if songposinbeats is near whole number, player is on rhythm, if near half, player is not on rhythm
-                float songPosRounded = Mathf.Round(songPosInBeats - beatDiffFix);
                 float inaccuracy = Mathf.Abs((songPosInBeats - beatDiffFix) - songPosRounded);
                 if (inaccuracy < rhythmThreshold)
                 {
@@ -181,6 +190,17 @@ public class WalkManager : MonoBehaviour
                     for (int i = 0; i < lights.Count; i++)
                     {
                         StartCoroutine("LightIntensify", lights[i]);
+                    }
+
+                    // only move if there are no obstacles or enemies
+                    if (walkCombo > 4)
+                    {
+                        targetPos = transform.position + 2 * (targetPos - transform.position);
+
+                        if (Physics.OverlapSphere(targetPos, .2f, obstacles).Length == 0 && Physics.OverlapSphere(targetPos, .2f, enemies).Length == 0)
+                        {
+                            movePoint.position = targetPos;
+                        }
                     }
                 }
 
@@ -201,7 +221,7 @@ public class WalkManager : MonoBehaviour
                     canMove = false;
 
                     // if songposinbeats is near half number, player is on rhythm, if not, player is not on rhythm
-                    float songPosRounded = Mathf.Round(songPosInBeats - beatDiffFix);
+                    songPosRounded = Mathf.Round(songPosInBeats - beatDiffFix);
                     float inaccuracy = Mathf.Abs((songPosInBeats - beatDiffFix) - songPosRounded);
                     if (inaccuracy < rhythmThreshold || inaccuracy > (0.5f - rhythmThreshold))
                     {
