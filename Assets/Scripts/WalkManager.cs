@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering.RendererUtils;
+using UnityEngine.SceneManagement;
 
 public class WalkManager : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class WalkManager : MonoBehaviour
     public float rhythmThreshold;
     private float previousBeat;
     public bool musicPlaying = false;
+    [HideInInspector]
+    public bool gameIsPaused = false;
 
     public GameObject testIndicatorWhite;
 
@@ -90,6 +93,11 @@ public class WalkManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (gameIsPaused)
+        {
+            return;
+        }
+
         // BEAT
 
         songPosInSecs = (float)(AudioSettings.dspTime - songStartTime);
@@ -233,6 +241,11 @@ public class WalkManager : MonoBehaviour
                         WorldNpc npc = enemy[0].gameObject.GetComponent<WorldNpc>();
                         npc.TakeDamage();
                     }
+
+                    else
+                    {
+                        TakeDamage();
+                    }
                 }
             }
         }
@@ -245,10 +258,24 @@ public class WalkManager : MonoBehaviour
         if (hp <= 0)
         {
             hp = 0;
+            Respawn();
         }
 
         float newPosX = Mathf.Lerp(hp100PosX, hp0PosX, (hpMax - hp) / hpMax);
         hpMask.transform.position = new Vector3(newPosX, hpMask.transform.position.y, hpMask.transform.position.z);
+    }
+
+    public void Respawn()
+    {
+        if (SceneManager.GetActiveScene().name == "WorldScene")
+        {
+            SceneManager.LoadScene("WorldScene");
+        }
+
+        else
+        {
+            SceneManager.LoadScene("XTESTWorld");
+        }
     }
 
     IEnumerator StartMusic()

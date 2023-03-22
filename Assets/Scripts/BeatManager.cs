@@ -25,10 +25,13 @@ public class BeatManager : MonoBehaviour
     public GameObject hitFlash;
     public GameObject notePrefab1;
     public GameObject notePrefab2;
+    public ParticleSystem comboParticle;
     private GameObject[] colors = new GameObject[2];
     public GameObject smashNotePrefab;
     public float smashHitsNeeded = 50f;
 
+    [HideInInspector]
+    public bool gameIsPaused = false;
     private bool notesMove = false;
     public AudioSource music;
     public GameObject noteHolder;
@@ -80,6 +83,11 @@ public class BeatManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (gameIsPaused)
+        {
+            return;
+        }
+
         // keep track of current beat
         songPosInSecs = (float)(AudioSettings.dspTime - songStartTime);
         songPosInBeats = songPosInSecs / secPerBeat;
@@ -207,6 +215,11 @@ public class BeatManager : MonoBehaviour
 
     IEnumerator Flash()
     {
+        if(combo % 10f == 0f)
+        {
+            comboParticle.Play();
+        }
+
         hitFlash.SetActive(true);
         yield return new WaitForSeconds(0.05f);
         hitFlash.SetActive(false);

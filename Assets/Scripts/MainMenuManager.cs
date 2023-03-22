@@ -15,6 +15,8 @@ public class MainMenuManager : MonoBehaviour
     public Slider effectsSlider;
     //public AudioSource testEffectSound;
 
+    public Animator animator;
+
     void Start()
     {
         if (!(PlayerPrefs.GetFloat("musicVol") == 0))
@@ -32,6 +34,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void PlayGame()
     {
+        Cursor.visible = false;
+
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             SceneManager.LoadScene("WorldScene");
@@ -76,5 +80,10 @@ public class MainMenuManager : MonoBehaviour
     {
         settingsButtons.SetActive(false);
         mainMenuButtons.SetActive(true);
+    }
+
+    public void ButtonAnimation()
+    {
+        animator.SetTrigger("ButtonMove");
     }
 }
