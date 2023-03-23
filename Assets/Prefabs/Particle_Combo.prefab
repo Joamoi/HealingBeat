@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 477307043083042703}
   - component: {fileID: 477307043083042697}
   - component: {fileID: 477307043083042702}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Particles_Sparkle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4840,7 +4840,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -4880,7 +4880,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 477307044119341401}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Particle_Combo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4914,7 +4914,7 @@ GameObject:
   - component: {fileID: 477307044243337285}
   - component: {fileID: 477307044243337287}
   - component: {fileID: 477307044243337284}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Particles_Round
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9742,7 +9742,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
