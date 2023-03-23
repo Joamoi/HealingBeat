@@ -14,11 +14,17 @@ public class WorldBoss : MonoBehaviour
         {
             if(SceneManager.GetActiveScene().name == "WorldScene")
             {
+                ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+                progressManager.bossReached = true;
+
                 SceneManager.LoadScene("BattleScene");
             }
 
             else
             {
+                ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+                progressManager.bossReached = true;
+
                 SceneManager.LoadScene("XTESTBattle");
             }
         }

@@ -8,6 +8,8 @@ TagManager:
   - Button
   - Miss
   - Light
+  - Progress
+  - NPCHolder
   layers:
   - Default
   - TransparentFX

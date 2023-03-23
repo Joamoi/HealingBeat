@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class BeatManager : MonoBehaviour
 {
@@ -281,9 +282,23 @@ public class BeatManager : MonoBehaviour
         if(hp <= 0)
         {
             hp = 0;
+            Respawn();
         }
 
         float newPosX = Mathf.Lerp(hp100PosX, hp0PosX, (hpMax - hp) / hpMax);
         hpMask.transform.position = new Vector3(newPosX, hpMask.transform.position.y, hpMask.transform.position.z);
+    }
+
+    public void Respawn()
+    {
+        if (SceneManager.GetActiveScene().name == "BattleScene")
+        {
+            SceneManager.LoadScene("WorldScene");
+        }
+
+        else
+        {
+            SceneManager.LoadScene("XTESTWorld");
+        }
     }
 }
