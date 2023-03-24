@@ -19,7 +19,7 @@ public class Line : MonoBehaviour
         beatsShownInAdvance = WalkManager.walkInstance.beatsShownInAdvance;
         spawnPos = transform.position;
         dir = new Vector3(0f, -4f, 0f) - transform.position;
-        removePos = new Vector3(0f, -4f, 0f) - 0.000f * dir;
+        removePos = new Vector3(0f, -4f, 0f) - 0.03f * dir;
     }
 
     // Update is called once per frame

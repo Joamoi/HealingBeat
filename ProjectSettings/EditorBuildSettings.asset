@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/XTESTBattle.unity
     guid: 5adac70b2821e504a97754a0bb0b88f2
+  - enabled: 1
+    path: Assets/Scenes/XTESTEnd.unity
+    guid: a81bcc4cd505f654bbbc58ee1cc1a4b4
   m_configObjects: {}

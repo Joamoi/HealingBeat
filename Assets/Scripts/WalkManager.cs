@@ -27,6 +27,9 @@ public class WalkManager : MonoBehaviour
     public bool gameIsPaused = false;
 
     public GameObject testIndicatorWhite;
+    public SpriteRenderer symbolRenderer;
+    public Sprite normalSymbol;
+    public Sprite biggerSymbol;
 
     public GameObject lineHolder;
     public GameObject linePrefab;
@@ -146,7 +149,7 @@ public class WalkManager : MonoBehaviour
 
             if ((!halfBeat || (halfBeat && battleOn)) && songPosInBeats > beatsShownInAdvance)
             {
-                StartCoroutine("LineBarFlash");
+                StartCoroutine("LineBarEffect");
             }
 
                 previousBeat = previousBeat + lineInterval;
@@ -304,11 +307,13 @@ public class WalkManager : MonoBehaviour
         musicPlaying = true;
     }
 
-    IEnumerator LineBarFlash()
+    IEnumerator LineBarEffect()
     {
-        testIndicatorWhite.SetActive(true);
-        yield return new WaitForSeconds(0.02f);
-        testIndicatorWhite.SetActive(false);
+        //testIndicatorWhite.SetActive(true);
+        symbolRenderer.sprite = biggerSymbol;
+        yield return new WaitForSeconds(0.12f);
+        symbolRenderer.sprite = normalSymbol;
+        //testIndicatorWhite.SetActive(false);
     }
 
     IEnumerator LightIntensify(Light light)
