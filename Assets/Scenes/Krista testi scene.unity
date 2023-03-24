@@ -5098,7 +5098,7 @@ GameObject:
   - component: {fileID: 626995697}
   - component: {fileID: 626995696}
   m_Layer: 0
-  m_Name: Masennus_Pilvi2 (1)
+  m_Name: Masennus_PilviDown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5125,7 +5125,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 40cce1ecb0f63f543a6464a3ed12b616, type: 2}
+  - {fileID: 2100000, guid: 3c9656257610158478eb28ee21681abd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5366,7 +5366,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.45824704, g: 0.2035867, b: 0.5754717, a: 1}
+      maxColor: {r: 0.7228774, g: 0.3037113, b: 0.8584906, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -6010,7 +6010,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 10
+      scalar: 15
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -9891,7 +9891,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 626995695}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.38600725, y: -2.068304, z: 0.40987486}
+  m_LocalPosition: {x: -0.69, y: -2.02, z: 0.29}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14922,7 +14922,7 @@ GameObject:
   - component: {fileID: 1660559155}
   - component: {fileID: 1660559154}
   m_Layer: 0
-  m_Name: Masennus_Pilvi2
+  m_Name: MasennusPilvi_Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14949,7 +14949,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9be28408e4d251b4cb49a3da684997f5, type: 2}
+  - {fileID: 2100000, guid: 3c9656257610158478eb28ee21681abd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -15009,7 +15009,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1660559153}
   serializedVersion: 8
   lengthInSec: 5
-  simulationSpeed: 0.5
+  simulationSpeed: 0.4
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -15190,7 +15190,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.4575472, g: 0.62998396, b: 1, a: 1}
+      maxColor: {r: 0.75886536, g: 0, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -19715,7 +19715,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1660559153}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.50600725, y: -1.6383041, z: 0.40987486}
+  m_LocalPosition: {x: -0.55, y: -1.585, z: 0.289}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -24707,7 +24707,7 @@ PrefabInstance:
     - target: {fileID: 24345341345526337, guid: 728842ad074e56c45836cad87c85eba8,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 728842ad074e56c45836cad87c85eba8, type: 3}
