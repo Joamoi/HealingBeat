@@ -64,6 +64,15 @@ public class BeatManager : MonoBehaviour
     public float damagePerMiss = 10f;
     public float damagePerFail = 30f;
 
+    public GameObject progressBar;
+    private Vector3 progressBarStartPos;
+    private Vector3 progressBarEndPos;
+    public SpriteRenderer bossRenderer;
+    public Sprite bossSprite1;
+    public Sprite bossSprite2;
+    public Sprite bossSprite3;
+    public GameObject endScreen;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -77,6 +86,8 @@ public class BeatManager : MonoBehaviour
         hp100PosX = hpMask.transform.position.x;
         hp0PosX = hp100PosX - 1.15f;
         hpMax = hp;
+        progressBarStartPos = progressBar.transform.position;
+        progressBarEndPos = new Vector3(0f, -4.86f, 0f);
 
         StartCoroutine("StartMusic");
     }
@@ -120,6 +131,20 @@ public class BeatManager : MonoBehaviour
                 smashNote.hitsNeeded = smashHitsNeeded;
 
                 nextSmashIndex++;
+            }
+
+            // interpolates song progress bar position based on current song position
+            progressBar.transform.position = Vector3.Lerp(progressBarStartPos, progressBarEndPos, songPosInSecs / music.clip.length);
+
+            if (songPosInSecs >= (music.clip.length / 2))
+            {
+                bossRenderer.sprite = bossSprite2;
+            }
+
+            if (songPosInSecs >= music.clip.length)
+            {
+                bossRenderer.sprite = bossSprite3;
+                StartCoroutine("EndScreen");
             }
         }
     }
@@ -299,6 +324,21 @@ public class BeatManager : MonoBehaviour
         else
         {
             SceneManager.LoadScene("XTESTWorld");
+        }
+    }
+
+    IEnumerator EndScreen()
+    {
+        yield return new WaitForSeconds(3f);
+
+        if (SceneManager.GetActiveScene().name == "BattleScene")
+        {
+            SceneManager.LoadScene("EndScene");
+        }
+
+        else
+        {
+            SceneManager.LoadScene("XTESTEnd");
         }
     }
 }
