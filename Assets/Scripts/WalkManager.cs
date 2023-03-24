@@ -45,6 +45,7 @@ public class WalkManager : MonoBehaviour
     public float moveSpeed = 4f;
     public bool canMove = true;
     private int walkCombo = 0;
+    public Transform bossRespawnPos;
 
     public LayerMask obstacles;
     public LayerMask enemies;
@@ -65,11 +66,23 @@ public class WalkManager : MonoBehaviour
     public float postExposure;
     public float lightDuration = 0.15f;
 
-    // Start is called before the first frame update
-    void Start()
+    // create list of all npcs in the world and store them in progress manager
+    private void Awake()
     {
         walkInstance = this;
 
+        ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+        progressManager.CreateNPCList();
+
+        if (progressManager.bossReached)
+        {
+            transform.position = bossRespawnPos.position;
+        }
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
         secPerBeat = 60f / songBpm;
         previousBeat = -1;
         hp100PosX = hpMask.transform.position.x;
@@ -267,6 +280,9 @@ public class WalkManager : MonoBehaviour
 
     public void Respawn()
     {
+        ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+        progressManager.resetNPCs = true;
+
         if (SceneManager.GetActiveScene().name == "WorldScene")
         {
             SceneManager.LoadScene("WorldScene");
