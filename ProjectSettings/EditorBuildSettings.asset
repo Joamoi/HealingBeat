@@ -15,15 +15,18 @@ EditorBuildSettings:
     path: Assets/Scenes/BattleScene.unity
     guid: f402e95a8b714dd448ce334d317f5fde
   - enabled: 1
+    path: Assets/Scenes/EndScene.unity
+    guid: 7fea16531e7ea794abc15baabd8d2c7f
+  - enabled: 0
     path: Assets/Scenes/XTESTMenu.unity
-    guid: 5c3903608fc9c4546b15445f3f9785b2
-  - enabled: 1
+    guid: 9ed8732556dc6ca4dbd32a7487ed355b
+  - enabled: 0
     path: Assets/Scenes/XTESTWorld.unity
-    guid: ebfff2ca18be16745a0a1b99d92eb3d7
-  - enabled: 1
+    guid: e474986ee60a6ad469fda4a1af24e0a5
+  - enabled: 0
     path: Assets/Scenes/XTESTBattle.unity
-    guid: 5adac70b2821e504a97754a0bb0b88f2
-  - enabled: 1
+    guid: 33763794bc5f2684ebd30034de8a36cd
+  - enabled: 0
     path: Assets/Scenes/XTESTEnd.unity
-    guid: a81bcc4cd505f654bbbc58ee1cc1a4b4
+    guid: a3a22cb194ad0f042b207f0c0ee87eaf
   m_configObjects: {}

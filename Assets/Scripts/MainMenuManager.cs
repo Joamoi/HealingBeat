@@ -15,8 +15,6 @@ public class MainMenuManager : MonoBehaviour
     public Slider effectsSlider;
     //public AudioSource testEffectSound;
 
-    public Animator animator;
-
     void Start()
     {
         if (!(PlayerPrefs.GetFloat("musicVol") == 0))
@@ -82,7 +80,7 @@ public class MainMenuManager : MonoBehaviour
         mainMenuButtons.SetActive(true);
     }
 
-    public void ButtonAnimation()
+    public void ButtonAnimation(Animator animator)
     {
         animator.SetTrigger("ButtonMove");
     }

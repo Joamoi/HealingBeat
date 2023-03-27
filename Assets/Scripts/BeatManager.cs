@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class BeatManager : MonoBehaviour
 {
     public static BeatManager beatInstance;
+    public GameObject progressPrefab;
 
     public float songBpm;
     private float secPerBeat;
@@ -71,12 +72,16 @@ public class BeatManager : MonoBehaviour
     public Sprite bossSprite1;
     public Sprite bossSprite2;
     public Sprite bossSprite3;
-    public GameObject endScreen;
 
     // Start is called before the first frame update
     void Start()
     {
         beatInstance = this;
+
+        if (GameObject.FindGameObjectsWithTag("Progress").Length == 0)
+        {
+            Instantiate(progressPrefab);
+        }
 
         CreateNotes();
 
@@ -120,7 +125,7 @@ public class BeatManager : MonoBehaviour
                 nextIndex++;
             }
 
-            // start new smashnote, next one ends it
+            // start new smashnote
             if (nextSmashIndex < smashNotes.Count && smashNotes[nextSmashIndex] <= songPosInBeats + beatsShownInAdvance)
             {
                 GameObject newSmashNote = Instantiate(smashNotePrefab, noteHolder.transform);
@@ -223,8 +228,6 @@ public class BeatManager : MonoBehaviour
         StartCoroutine("Flash");
 
         pointsText.text = "" + points.ToString();
-        feedbackText.color = new Color(0, 255, 0);
-        feedbackText.text = "SMASH";
     }
 
     public void SmashFail()
@@ -249,6 +252,18 @@ public class BeatManager : MonoBehaviour
         hitFlash.SetActive(true);
         yield return new WaitForSeconds(0.05f);
         hitFlash.SetActive(false);
+    }
+
+    public void SmashFeedback()
+    {
+        pointsText.text = "" + points.ToString();
+        feedbackText.color = new Color32(253, 215, 148, 255);
+        feedbackText.text = "SMASH";
+    }
+
+    public void HideFeedback()
+    {
+        feedbackText.text = "";
     }
 
     public void CreateNotes()

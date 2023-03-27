@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class WalkManager : MonoBehaviour
 {
     public static WalkManager walkInstance;
+    public GameObject progressPrefab;
 
     public float songBpm;
     private float secPerBeat;
@@ -22,27 +23,22 @@ public class WalkManager : MonoBehaviour
     public float beatDiffFix;
     public float rhythmThreshold;
     private float previousBeat;
+    [HideInInspector]
     public bool musicPlaying = false;
     [HideInInspector]
     public bool gameIsPaused = false;
 
-    public GameObject testIndicatorWhite;
-    public SpriteRenderer symbolRenderer;
-    public Sprite normalSymbol;
-    public Sprite biggerSymbol;
-
     public GameObject lineHolder;
     public GameObject linePrefab;
     public float beatsShownInAdvance;
-    private float lineInterval = 0.5f;
+    private float lineInterval = 1f;
     [HideInInspector]
     public bool battleOn = false;
-    private bool halfBeat = true;
     public SpriteRenderer lineBar;
     private Color lineBarOriginalColor;
     public Color lineBarBattleColor;
+    public Animator symbolAnimator;
 
-    // movement in this script is based on movepoint towards which the player will move
     public Transform movePoint;
     public Transform attackPoint;
     public float moveSpeed = 4f;
@@ -69,10 +65,25 @@ public class WalkManager : MonoBehaviour
     public float postExposure;
     public float lightDuration = 0.15f;
 
+    public SpriteRenderer leftBunny;
+    public SpriteRenderer rightBunny;
+    public Animator leftBunnyAnimator;
+    public Animator rightBunnyAnimator;
+    private SpriteRenderer[] bunnies = new SpriteRenderer[2];
+    private float[] bunnyValues = new float[2];
+    private float bunnyValue = 0f;
+    private GameObject npcObject;
+    private bool canHit = false;
+
     // create list of all npcs in the world and store them in progress manager
     private void Awake()
     {
         walkInstance = this;
+
+        if (GameObject.FindGameObjectsWithTag("Progress").Length == 0)
+        {
+            Instantiate(progressPrefab);
+        }
 
         ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
         progressManager.CreateNPCList();
@@ -92,6 +103,8 @@ public class WalkManager : MonoBehaviour
         hp0PosX = hp100PosX - 1.15f;
         hpMax = hp;
         lineBarOriginalColor = lineBar.color;
+        bunnies[0] = leftBunny; bunnies[1] = rightBunny;
+        bunnyValues[0] = -1; bunnyValues[1] = 1;
 
         GameObject[] lightObjects = GameObject.FindGameObjectsWithTag("Light");
         
@@ -119,18 +132,6 @@ public class WalkManager : MonoBehaviour
         songPosInSecs = (float)(AudioSettings.dspTime - songStartTime);
         songPosInBeats = songPosInSecs / secPerBeat;
 
-        if (Physics.OverlapBox(transform.position, new Vector3(1.2f, 1.2f, 1.2f), Quaternion.identity, enemies).Length > 0)
-        {
-            battleOn = true;
-            lineBar.color = lineBarBattleColor;
-        }
-
-        else
-        {
-            battleOn = false;
-            lineBar.color = lineBarOriginalColor;
-        }
-
         if ((songPosInBeats - previousBeat) >= (lineInterval + beatDiffFix) && musicPlaying)
         {
             GameObject newLineLeft = Instantiate(linePrefab, lineHolder.transform);
@@ -138,28 +139,26 @@ public class WalkManager : MonoBehaviour
 
             Line lineLeft = newLineLeft.GetComponent<Line>();
             lineLeft.beatOfThisLine = previousBeat + beatsShownInAdvance + lineInterval + beatDiffFix;
-            lineLeft.halfBeat = halfBeat;
 
             GameObject newLineRight = Instantiate(linePrefab, lineHolder.transform);
             newLineRight.transform.position = new Vector3(6f, -4f, 0f);
 
             Line lineRight = newLineRight.GetComponent<Line>();
             lineRight.beatOfThisLine = previousBeat + beatsShownInAdvance + lineInterval + beatDiffFix;
-            lineRight.halfBeat = halfBeat;
 
-            if ((!halfBeat || (halfBeat && battleOn)) && songPosInBeats > beatsShownInAdvance)
+            previousBeat = previousBeat + lineInterval;
+
+            if (songPosInBeats > beatsShownInAdvance)
             {
-                StartCoroutine("LineBarEffect");
+                symbolAnimator.SetTrigger("Pulse");
+                leftBunnyAnimator.SetTrigger("Pulse");
+                rightBunnyAnimator.SetTrigger("Pulse");
             }
-
-                previousBeat = previousBeat + lineInterval;
-            halfBeat = !halfBeat;
-
-            
-        } 
+        }
 
         // MOVE
 
+        // movement in this script is based on movepoint towards which the player will move
         // move player towards movepoint every frame
         transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
 
@@ -179,9 +178,25 @@ public class WalkManager : MonoBehaviour
         }
 
         // re-enable movement after releasing movement buttons
-        if(moveHori == 0f && moveVert == 0f)
+        if(moveHori == 0f && moveVert == 0f && !battleOn)
         {
             canMove = true;
+        }
+
+        // NPC BATTLE
+
+        if (battleOn && canHit)
+        {
+            if (moveHori != 0)
+            {
+                CheckBattleHit(moveHori);
+            }
+        }
+
+        // re-enable movement after releasing movement buttons
+        if (moveHori == 0f && moveVert == 0f && battleOn)
+        {
+            canHit = true;
         }
     }
 
@@ -196,10 +211,10 @@ public class WalkManager : MonoBehaviour
                 movePoint.position = targetPos;
                 canMove = false;
 
-                
                 float oldSongPosRounded = songPosRounded;
                 songPosRounded = Mathf.Round(songPosInBeats - beatDiffFix);
 
+                // moving combo fails if player doesn't move every beat
                 if (songPosRounded - oldSongPosRounded > (1 + 2 * rhythmThreshold))
                 {
                     walkCombo = 0;
@@ -217,6 +232,7 @@ public class WalkManager : MonoBehaviour
                     }
 
                     // only move if there are no obstacles or enemies
+                    // move 2 tiles with combo, 1 otherwise
                     if (walkCombo > 4)
                     {
                         targetPos = transform.position + 2 * (targetPos - transform.position);
@@ -228,6 +244,7 @@ public class WalkManager : MonoBehaviour
                     }
                 }
 
+                // moving combo fails if player isn't on beat
                 else
                 {
                     walkCombo = 0;
@@ -238,33 +255,63 @@ public class WalkManager : MonoBehaviour
             {
                 Collider[] enemy = Physics.OverlapSphere(targetPos, .2f, enemies);
 
-                // attack if there is an enemy
+                // start npc battle if there is an enemy
                 if (enemy.Length > 0)
                 {
-                    attackPoint.position = targetPos;
+                    npcObject = enemy[0].transform.gameObject;
+                    WorldNpc npc = npcObject.GetComponent<WorldNpc>();
+                    npc.hpObject.SetActive(true);
+
+                    battleOn = true;
                     canMove = false;
+                    lineBar.color = lineBarBattleColor;
 
-                    // if songposinbeats is near half number, player is on rhythm, if not, player is not on rhythm
-                    songPosRounded = Mathf.Round(songPosInBeats - beatDiffFix);
-                    float inaccuracy = Mathf.Abs((songPosInBeats - beatDiffFix) - songPosRounded);
-                    if (inaccuracy < rhythmThreshold || inaccuracy > (0.5f - rhythmThreshold))
-                    {
-                        for (int i = 0; i < lights.Count; i++)
-                        {
-                            StartCoroutine("LightIntensify", lights[i]);
-                        }
-
-                        WorldNpc npc = enemy[0].gameObject.GetComponent<WorldNpc>();
-                        npc.TakeDamage();
-                    }
-
-                    else
-                    {
-                        TakeDamage();
-                    }
+                    RandomBunny();
                 }
             }
         }
+    }
+
+    public void CheckBattleHit(float moveHori)
+    {
+        // if songposinbeats is near whole number, player is on rhythm, if near half, player is not on rhythm
+        songPosRounded = Mathf.Round(songPosInBeats - beatDiffFix);
+        float inaccuracy = Mathf.Abs((songPosInBeats - beatDiffFix) - songPosRounded);
+
+        WorldNpc npc = npcObject.GetComponent<WorldNpc>();
+
+        // left/right button press must match bunny type
+        if (moveHori == bunnyValue && inaccuracy < rhythmThreshold)
+        {
+            npc.TakeHeal();
+
+            for (int i = 0; i < lights.Count; i++)
+            {
+                StartCoroutine("LightIntensify", lights[i]);
+            }
+        }
+
+        else
+        {
+            TakeDamage();
+        }
+
+        if (npc.hp < 100)
+        {
+            RandomBunny();
+            canHit = false;
+        }
+    }
+
+    public void RandomBunny()
+    {
+        leftBunny.enabled = false;
+        rightBunny.enabled = false;
+
+        int randomBunny = Random.Range(0, 2);
+
+        bunnies[randomBunny].enabled = true;
+        bunnyValue = bunnyValues[randomBunny];
     }
 
     public void TakeDamage()
@@ -279,6 +326,14 @@ public class WalkManager : MonoBehaviour
 
         float newPosX = Mathf.Lerp(hp100PosX, hp0PosX, (hpMax - hp) / hpMax);
         hpMask.transform.position = new Vector3(newPosX, hpMask.transform.position.y, hpMask.transform.position.z);
+    }
+
+    public void BattleOver()
+    {
+        leftBunny.enabled = false;
+        rightBunny.enabled = false;
+        battleOn = false;
+        lineBar.color = lineBarOriginalColor;
     }
 
     public void Respawn()
@@ -305,15 +360,6 @@ public class WalkManager : MonoBehaviour
         songStartTime = (float)AudioSettings.dspTime;
         music.Play();
         musicPlaying = true;
-    }
-
-    IEnumerator LineBarEffect()
-    {
-        //testIndicatorWhite.SetActive(true);
-        symbolRenderer.sprite = biggerSymbol;
-        yield return new WaitForSeconds(0.12f);
-        symbolRenderer.sprite = normalSymbol;
-        //testIndicatorWhite.SetActive(false);
     }
 
     IEnumerator LightIntensify(Light light)

@@ -15,6 +15,10 @@ public class EndManager : MonoBehaviour
 
     public void ToMainMenu()
     {
+        ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+        progressManager.bossReached = false;
+        progressManager.resetNPCs = true;
+
         if (SceneManager.GetActiveScene().name == "EndScene")
         {
             SceneManager.LoadScene("MainMenu");

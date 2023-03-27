@@ -70,6 +70,7 @@ public class SmashNote : MonoBehaviour
         if (noteEnd.transform.position.x - (buttonPosX - 0.6f) <= 0 && !hitCheckDone)
         {
             hitCheckDone = true;
+            BeatManager.beatInstance.HideFeedback();
 
             if (hitsDone < hitsNeeded)
             {
@@ -88,6 +89,7 @@ public class SmashNote : MonoBehaviour
         if (collision.tag == "Button")
         {
             canBePressed = true;
+            BeatManager.beatInstance.SmashFeedback();
         }
     }
 
