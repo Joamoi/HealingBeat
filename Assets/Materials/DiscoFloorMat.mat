@@ -46,14 +46,14 @@ Material:
     - _FlipBookScale: 2
     - _FlipBookTile: 1
     - _FloorRegion: 0.25
-    - _Intensity: 1.5
+    - _Intensity: 0.5
     - _MaxFrames: 4
     - _QueueControl: 0
     - _QueueOffset: 0
     - _TimeSpeed: 2
     - _UseMusicTime: 0
     m_Colors:
-    - _BaseColor: {r: 0.14117646, g: 0.07450979, b: 0.10588237, a: 1}
+    - _BaseColor: {r: 0.0754717, g: 0.0754717, b: 0.0754717, a: 1}
     - _Offset: {r: 0.5, g: 0, b: 0, a: 0}
     - _Tile: {r: 0.5, g: 0.5, b: 0, a: 0}
   m_BuildTextureStacks: []
