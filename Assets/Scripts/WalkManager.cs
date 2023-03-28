@@ -40,6 +40,7 @@ public class WalkManager : MonoBehaviour
     public Animator symbolAnimator;
 
     public Transform playerModel;
+    public Animator animator;
     public Transform movePoint;
     public Transform attackPoint;
     public float moveSpeed = 4f;
@@ -261,6 +262,8 @@ public class WalkManager : MonoBehaviour
                 {
                     walkCombo = 0;
                 }
+
+                animator.SetTrigger("Move");
             }
 
             else

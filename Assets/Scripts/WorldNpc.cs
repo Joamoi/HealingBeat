@@ -33,7 +33,7 @@ public class WorldNpc : MonoBehaviour
         }
 
         hpStartPosX = hpMask.transform.position.x;
-        hpFullPosX = hpStartPosX + 0.9f;
+        hpFullPosX = hpStartPosX + 1.01f;
         hpMax = 100f;
 
         float newPosX = Mathf.Lerp(hpStartPosX, hpFullPosX, hp / hpMax);
