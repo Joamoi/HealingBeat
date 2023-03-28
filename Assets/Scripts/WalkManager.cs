@@ -39,11 +39,13 @@ public class WalkManager : MonoBehaviour
     public Color lineBarBattleColor;
     public Animator symbolAnimator;
 
+    public Transform playerModel;
     public Transform movePoint;
     public Transform attackPoint;
     public float moveSpeed = 4f;
     public bool canMove = true;
     private int walkCombo = 0;
+    public Transform jumpParticleParent;
     public Transform bossRespawnPos;
 
     public LayerMask obstacles;
@@ -202,6 +204,11 @@ public class WalkManager : MonoBehaviour
 
     public void TryToMove(Vector3 targetPos)
     {
+        // turn the player to face the direction it's trying to move
+        Vector3 faceDir = targetPos - transform.position;
+        float angle = Vector3.SignedAngle(playerModel.transform.forward, faceDir, Vector3.up);
+        playerModel.transform.RotateAround(transform.position, Vector3.up, angle);
+
         // only move if player has reached the movepoint
         if (Vector3.Distance(transform.position, movePoint.position) == 0f)
         {
@@ -225,6 +232,11 @@ public class WalkManager : MonoBehaviour
                 if (inaccuracy < rhythmThreshold)
                 {
                     walkCombo++;
+                    
+                    foreach (Transform particle in jumpParticleParent)
+                    {
+                        particle.GetComponent<ParticleSystem>().Play();
+                    }
 
                     for (int i = 0; i < lights.Count; i++)
                     {

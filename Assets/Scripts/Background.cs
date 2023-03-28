@@ -26,7 +26,7 @@ public class Background : MonoBehaviour
         {
             float interval = Random.Range(minInterval, maxInterval) * startMultiplier;
 
-            GameObject newObject = Instantiate(objects[Random.Range(0, 4)], parentObject.transform);
+            GameObject newObject = Instantiate(objects[Random.Range(0, 5)], parentObject.transform);
             newObject.transform.position = spawnPos.transform.position - new Vector3(i + interval, 0f, 0f);
 
             i = i + interval;
@@ -43,7 +43,7 @@ public class Background : MonoBehaviour
         
         if(timer >= nextSpawn)
         {
-            GameObject newObject = Instantiate(objects[Random.Range(0, 4)], parentObject.transform);
+            GameObject newObject = Instantiate(objects[Random.Range(0, 5)], parentObject.transform);
             newObject.transform.position = spawnPos.transform.position;
 
             nextSpawn = timer + Random.Range(minInterval, maxInterval);

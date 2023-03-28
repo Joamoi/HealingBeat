@@ -617,10 +617,11 @@ MonoBehaviour:
   destroyPos: {fileID: 830258269}
   parentObject: {fileID: 770103578}
   objects:
-  - {fileID: 7066696074165133097, guid: bfd86ee53b572c84cba1dd9e318542fa, type: 3}
-  - {fileID: 5031499997217921529, guid: 6a778ba72a7596b4c8d4b666e3cbadcc, type: 3}
-  - {fileID: 7638794093336444052, guid: a871dfd54fa7dd74faac4b073612605b, type: 3}
-  - {fileID: 6200251879823805463, guid: 1bfb4b3e035b190458644e119a91a4ee, type: 3}
+  - {fileID: 859926872639561432, guid: cd61515c7bb37b7408991ce25580bf86, type: 3}
+  - {fileID: 1185613972197126490, guid: cc7f3c5edf6f9e745950484640b7c205, type: 3}
+  - {fileID: 201417209041868995, guid: 4e2b3ffac133bd64d9dc4d9bce3f7845, type: 3}
+  - {fileID: 8665068257943977191, guid: d71763cebb57d3244b583283547f06a6, type: 3}
+  - {fileID: 8165738305883979198, guid: 9b0a50aac683d0348ae51d883da87846, type: 3}
   minInterval: 4
   maxInterval: 8
   startMultiplier: 2.1
@@ -4165,7 +4166,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 026fd1230b7d66d40926013d6723613c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4186,7 +4187,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a4b5bdb5f08f79a4bb4a64109b1ac778, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 82d493611a51529428ee3c927ab90309, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -4767,10 +4768,7 @@ MonoBehaviour:
   damagePerMiss: 10
   damagePerFail: 30
   progressBar: {fileID: 411770425}
-  bossRenderer: {fileID: 1395136418}
-  bossSprite1: {fileID: 21300000, guid: a4b5bdb5f08f79a4bb4a64109b1ac778, type: 3}
-  bossSprite2: {fileID: 21300000, guid: 6900b4b4f0fc09a45a3874c0cc0af6b3, type: 3}
-  bossSprite3: {fileID: 21300000, guid: 82d493611a51529428ee3c927ab90309, type: 3}
+  saturationMaterial: {fileID: 2100000, guid: 026fd1230b7d66d40926013d6723613c, type: 2}
 --- !u!4 &1920254928
 Transform:
   m_ObjectHideFlags: 0

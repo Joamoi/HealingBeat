@@ -68,10 +68,7 @@ public class BeatManager : MonoBehaviour
     public GameObject progressBar;
     private Vector3 progressBarStartPos;
     private Vector3 progressBarEndPos;
-    public SpriteRenderer bossRenderer;
-    public Sprite bossSprite1;
-    public Sprite bossSprite2;
-    public Sprite bossSprite3;
+    public Material saturationMaterial;
 
     // Start is called before the first frame update
     void Start()
@@ -141,16 +138,8 @@ public class BeatManager : MonoBehaviour
             // interpolates song progress bar position based on current song position
             progressBar.transform.position = Vector3.Lerp(progressBarStartPos, progressBarEndPos, songPosInSecs / music.clip.length);
 
-            if (songPosInSecs >= (music.clip.length / 2))
-            {
-                bossRenderer.sprite = bossSprite2;
-            }
-
-            if (songPosInSecs >= music.clip.length)
-            {
-                bossRenderer.sprite = bossSprite3;
-                StartCoroutine("EndScreen");
-            }
+            float saturationValue = Mathf.Lerp(0f, 1f, songPosInSecs / music.clip.length);
+            saturationMaterial.SetFloat("_SatValue", saturationValue);
         }
     }
 
