@@ -486,6 +486,12 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &41362733 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8a119cd506de46142a9ecfb789c2ca23,
+    type: 3}
+  m_PrefabInstance: {fileID: 1707039734}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &49480830
 GameObject:
   m_ObjectHideFlags: 0
@@ -4140,6 +4146,7 @@ GameObject:
   - component: {fileID: 376517826}
   - component: {fileID: 376517828}
   - component: {fileID: 376517827}
+  - component: {fileID: 376517829}
   m_Layer: 6
   m_Name: WonkySkyScraper (8)
   m_TagString: Untagged
@@ -4213,6 +4220,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 376517825}
   m_Mesh: {fileID: 7805972648536594488, guid: c3ce403cecec21c4b93c9c7bc0ceeb46, type: 3}
+--- !u!65 &376517829
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 376517825}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.030889118, y: 0.019999998, z: 0.24}
+  m_Center: {x: 6.620837e-13, y: 3.743132e-11, z: 0.12}
 --- !u!1 &377742788
 GameObject:
   m_ObjectHideFlags: 0
@@ -4693,6 +4713,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1662311091}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &461034601 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d03d69e71cb01a4c825a23ae129236e,
+    type: 3}
+  m_PrefabInstance: {fileID: 2049079443}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &461034602
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 461034601}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9633364, y: 1.6203198, z: 3.1185548}
+  m_Center: {x: 0.059029967, y: 0.31015992, z: -0.03593552}
 --- !u!1 &480021833
 GameObject:
   m_ObjectHideFlags: 0
@@ -7165,6 +7204,25 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ede3a7ea565b4604ba5ef151e42d8ccf, type: 3}
+--- !u!1 &724938757 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6084296194101483868, guid: d98ae177e94283e42a9ed832066969e9,
+    type: 3}
+  m_PrefabInstance: {fileID: 515473422}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &724938761
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 724938757}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 6.9237175, y: 8.601663, z: 12.064521}
+  m_Center: {x: -0.44845247, y: 0, z: 5.415233}
 --- !u!1001 &727645995
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9416,6 +9474,19 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1707039734}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &1055316997
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41362733}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.8015857, y: 1, z: 7.942759}
+  m_Center: {x: 0.5202437, y: 0, z: 1.485015}
 --- !u!4 &1061917774 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ede3a7ea565b4604ba5ef151e42d8ccf,
@@ -10308,6 +10379,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1273220254 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3265998355212746722, guid: 81e5de50f80513741ac32e693b66b402,
+    type: 3}
+  m_PrefabInstance: {fileID: 2307418794797259275}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1273220258
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273220254}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10.141336, y: 1, z: 11.747187}
+  m_Center: {x: 0.09675216, y: 0, z: 1.3017492}
 --- !u!1 &1286634748 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b2ee8ded4c19592469704d742a7545b5,
@@ -10533,6 +10623,7 @@ GameObject:
   - component: {fileID: 1390080460}
   - component: {fileID: 1390080462}
   - component: {fileID: 1390080461}
+  - component: {fileID: 1390080463}
   m_Layer: 6
   m_Name: WonkySkyScraper (7)
   m_TagString: Untagged
@@ -10606,6 +10697,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1390080459}
   m_Mesh: {fileID: 7805972648536594488, guid: c3ce403cecec21c4b93c9c7bc0ceeb46, type: 3}
+--- !u!65 &1390080463
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1390080459}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.030889118, y: 0.019999998, z: 0.24}
+  m_Center: {x: -0.0000000074499185, y: -0.000000007413149, z: 0.12}
 --- !u!1001 &1394380645
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12012,6 +12116,7 @@ GameObject:
   - component: {fileID: 1540882839}
   - component: {fileID: 1540882841}
   - component: {fileID: 1540882840}
+  - component: {fileID: 1540882842}
   m_Layer: 6
   m_Name: WonkySkyScraper (6)
   m_TagString: Untagged
@@ -12085,6 +12190,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1540882838}
   m_Mesh: {fileID: 7805972648536594488, guid: c3ce403cecec21c4b93c9c7bc0ceeb46, type: 3}
+--- !u!65 &1540882842
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1540882838}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.030889118, y: 0.019999998, z: 0.24}
+  m_Center: {x: -0.0000000074499185, y: 0.000000007488012, z: 0.12}
 --- !u!1 &1559018973
 GameObject:
   m_ObjectHideFlags: 0
@@ -15675,6 +15793,7 @@ GameObject:
   - component: {fileID: 2001854436}
   - component: {fileID: 2001854438}
   - component: {fileID: 2001854437}
+  - component: {fileID: 2001854439}
   m_Layer: 6
   m_Name: MiddleHeight_Building (1)
   m_TagString: Untagged
@@ -15756,6 +15875,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2001854435}
   m_Mesh: {fileID: 8668003881107577370, guid: d98ae177e94283e42a9ed832066969e9, type: 3}
+--- !u!65 &2001854439
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2001854435}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 6.9237175, y: 8.601663, z: 12.064521}
+  m_Center: {x: -0.44845247, y: 0, z: 5.415233}
 --- !u!1 &2008727506
 GameObject:
   m_ObjectHideFlags: 0
@@ -16715,6 +16847,7 @@ GameObject:
   - component: {fileID: 2065753531}
   - component: {fileID: 2065753533}
   - component: {fileID: 2065753532}
+  - component: {fileID: 2065753534}
   m_Layer: 6
   m_Name: WonkySkyScraper (5)
   m_TagString: Untagged
@@ -16788,6 +16921,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2065753530}
   m_Mesh: {fileID: 7805972648536594488, guid: c3ce403cecec21c4b93c9c7bc0ceeb46, type: 3}
+--- !u!65 &2065753534
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065753530}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.030889131, y: 0.02000001, z: 0.24000008}
+  m_Center: {x: 0.00000004446905, y: 0.0000000020996551, z: 0.12000003}
 --- !u!1 &2067084712
 GameObject:
   m_ObjectHideFlags: 0
@@ -17742,6 +17888,7 @@ GameObject:
   - component: {fileID: 8924641675503014164}
   - component: {fileID: 788698300522612395}
   - component: {fileID: 4016613866599945924}
+  - component: {fileID: 8924641675503014165}
   m_Layer: 6
   m_Name: WonkySkyScraper
   m_TagString: Untagged
@@ -18309,6 +18456,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8112724889936988839, guid: 81e5de50f80513741ac32e693b66b402,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 10.6924095
+      objectReference: {fileID: 0}
+    - target: {fileID: 8112724889936988839, guid: 81e5de50f80513741ac32e693b66b402,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 8.910161
+      objectReference: {fileID: 0}
+    - target: {fileID: 8112724889936988839, guid: 81e5de50f80513741ac32e693b66b402,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 10.452723
+      objectReference: {fileID: 0}
+    - target: {fileID: 8112724889936988839, guid: 81e5de50f80513741ac32e693b66b402,
+        type: 3}
+      propertyPath: m_Center.x
+      value: 0.3722887
+      objectReference: {fileID: 0}
+    - target: {fileID: 8112724889936988839, guid: 81e5de50f80513741ac32e693b66b402,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 3.9550815
+      objectReference: {fileID: 0}
+    - target: {fileID: 8112724889936988839, guid: 81e5de50f80513741ac32e693b66b402,
+        type: 3}
+      propertyPath: m_Center.z
+      value: 0.65451664
       objectReference: {fileID: 0}
     - target: {fileID: 8118036560460873570, guid: 81e5de50f80513741ac32e693b66b402,
         type: 3}
@@ -19470,6 +19647,7 @@ GameObject:
   - component: {fileID: 1330836299959255750}
   - component: {fileID: 5393755993539052460}
   - component: {fileID: 5531014918207424806}
+  - component: {fileID: 7446560168116335017}
   m_Layer: 6
   m_Name: WonkScraper
   m_TagString: Untagged
@@ -19477,6 +19655,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!65 &7446560168116335017
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7446560168116335016}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.02236605, y: 0.021248719, z: 0.0402527}
+  m_Center: {x: 0.0005536397, y: -0.00000471245, z: 0.02012635}
 --- !u!4 &8647537500776525527 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7444862012239666824, guid: 9381c2615d307da45a3d6035080d9c74,
@@ -19511,6 +19702,19 @@ Transform:
   m_Father: {fileID: 543450652990548200}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8924641675503014165
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978009572337727799}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.030889114, y: 0.019999994, z: 0.23999995}
+  m_Center: {x: 0, y: 9.313226e-10, z: 0.119999975}
 --- !u!4 &8924641675942408201 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4756652230449779687, guid: ec9e4b183566b02419c1d8be993cef76,
