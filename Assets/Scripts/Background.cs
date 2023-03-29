@@ -13,6 +13,8 @@ public class Background : MonoBehaviour
     public float maxInterval;
     public static float backgroundMoveSpeed = 2f;
     public float startMultiplier;
+    private int previous = 99;
+    private int randomBuilding;
 
     private float timer;
     private float nextSpawn;
@@ -26,10 +28,17 @@ public class Background : MonoBehaviour
         {
             float interval = Random.Range(minInterval, maxInterval) * startMultiplier;
 
-            GameObject newObject = Instantiate(objects[Random.Range(0, 5)], parentObject.transform);
+            do
+            {
+                randomBuilding = Random.Range(0, 5);
+            }
+            while (previous == randomBuilding);
+
+            GameObject newObject = Instantiate(objects[randomBuilding], parentObject.transform);
             newObject.transform.position = spawnPos.transform.position - new Vector3(i + interval, 0f, 0f);
 
             i = i + interval;
+            previous = randomBuilding;
         }
 
         timer = 0f;
@@ -43,10 +52,17 @@ public class Background : MonoBehaviour
         
         if(timer >= nextSpawn)
         {
-            GameObject newObject = Instantiate(objects[Random.Range(0, 5)], parentObject.transform);
+            do
+            {
+                randomBuilding = Random.Range(0, 5);
+            }
+            while (previous == randomBuilding);
+
+            GameObject newObject = Instantiate(objects[randomBuilding], parentObject.transform);
             newObject.transform.position = spawnPos.transform.position;
 
             nextSpawn = timer + Random.Range(minInterval, maxInterval);
+            previous = randomBuilding;
         }
     }
 }

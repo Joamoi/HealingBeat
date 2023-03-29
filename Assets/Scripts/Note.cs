@@ -68,6 +68,7 @@ public class Note : MonoBehaviour
 
         if (collision.tag == "Miss")
         {
+            Debug.Log("Miss");
             BeatManager.beatInstance.Miss();
         }
     }
@@ -76,6 +77,7 @@ public class Note : MonoBehaviour
     {
         if (collision.tag == "Button")
         {
+            Debug.Log("Exit");
             canBePressed = false;
         }
     }

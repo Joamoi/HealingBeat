@@ -9,10 +9,11 @@ public class WorldNpc : MonoBehaviour
     private float hpFullPosX;
     private float hpStartPosX;
     private float hpMax;
-    public GameObject testCloud;
+    public ParticleSystem cloud;
     public GameObject reaction;
     public GameObject hpMask;
     public GameObject hpObject;
+    public Animator animator;
 
     // check from progressmanager if this npc is already healed or not
     void Start()
@@ -56,7 +57,7 @@ public class WorldNpc : MonoBehaviour
     public void Heal()
     {
         hp = 100;
-        testCloud.SetActive(false);
+        cloud.Stop();
         StartCoroutine("Reaction");
         gameObject.layer = LayerMask.NameToLayer("Obstacles");
 
@@ -73,18 +74,21 @@ public class WorldNpc : MonoBehaviour
         }
 
         WalkManager.walkInstance.BattleOver();
+        WalkManager.walkInstance.HealSound();
     }
 
     public void Healed()
     {
         hp = 100;
-        testCloud.SetActive(false);
+        cloud.Stop();
+        animator.SetTrigger("Healed");
         gameObject.layer = LayerMask.NameToLayer("Obstacles");
     }
 
     IEnumerator Reaction()
     {
         yield return new WaitForSeconds(1f);
+        animator.SetTrigger("Healed");
         hpObject.SetActive(false);
         reaction.SetActive(true);
         yield return new WaitForSeconds(3f);

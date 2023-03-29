@@ -17,7 +17,6 @@ public class WalkManager : MonoBehaviour
     [HideInInspector]
     public float songPosInBeats;
     private float songStartTime;
-    public AudioSource music;
     private float songPosRounded = 0f;
 
     public float beatDiffFix;
@@ -27,6 +26,11 @@ public class WalkManager : MonoBehaviour
     public bool musicPlaying = false;
     [HideInInspector]
     public bool gameIsPaused = false;
+
+    public AudioSource music;
+    public AudioSource healSound;
+    public AudioSource jumpSound;
+    public AudioSource damageSound;
 
     public GameObject lineHolder;
     public GameObject linePrefab;
@@ -38,6 +42,8 @@ public class WalkManager : MonoBehaviour
     private Color lineBarOriginalColor;
     public Color lineBarBattleColor;
     public Animator symbolAnimator;
+    public ParticleSystem healParticle;
+    public ParticleSystem jumpParticle;
 
     public Transform playerModel;
     public Animator animator;
@@ -46,7 +52,6 @@ public class WalkManager : MonoBehaviour
     public float moveSpeed = 4f;
     public bool canMove = true;
     private int walkCombo = 0;
-    public Transform jumpParticleParent;
     public Transform bossRespawnPos;
 
     public LayerMask obstacles;
@@ -109,8 +114,8 @@ public class WalkManager : MonoBehaviour
         bunnies[0] = leftBunny; bunnies[1] = rightBunny;
         bunnyValues[0] = -1; bunnyValues[1] = 1;
 
+        // gather all lights for intensify
         GameObject[] lightObjects = GameObject.FindGameObjectsWithTag("Light");
-        
         for (int i = 0; i < lightObjects.Length; i++)
         {
             lights.Add(lightObjects[i].GetComponent<Light>());
@@ -233,15 +238,12 @@ public class WalkManager : MonoBehaviour
                 if (inaccuracy < rhythmThreshold)
                 {
                     walkCombo++;
-                    
-                    foreach (Transform particle in jumpParticleParent)
-                    {
-                        particle.GetComponent<ParticleSystem>().Play();
-                    }
+                    jumpSound.Play();
+                    jumpParticle.Play();
+                    StartCoroutine("PPIntensify");
 
                     for (int i = 0; i < lights.Count; i++)
                     {
-                        StartCoroutine("PPIntensify");
                         //StartCoroutine("LightIntensify", lights[i]);
                     }
 
@@ -300,10 +302,12 @@ public class WalkManager : MonoBehaviour
         if (moveHori == bunnyValue && inaccuracy < rhythmThreshold)
         {
             npc.TakeHeal();
+            healParticle.Play();
+
+            StartCoroutine("PPIntensify");
 
             for (int i = 0; i < lights.Count; i++)
             {
-                StartCoroutine("PPIntensify");
                 //StartCoroutine("LightIntensify", lights[i]);
             }
         }
@@ -333,6 +337,7 @@ public class WalkManager : MonoBehaviour
 
     public void TakeDamage()
     {
+        damageSound.Play();
         hp -= damagePerMiss;
 
         if (hp <= 0)
@@ -417,5 +422,10 @@ public class WalkManager : MonoBehaviour
         light.intensity -= 0.5f * lightMultiplier * originalIntensity;
         yield return new WaitForSeconds(lightDuration / 3f);
         light.intensity -= 0.5f * lightMultiplier * originalIntensity;
+    }
+
+    public void HealSound()
+    {
+        healSound.Play();
     }
 }

@@ -16,6 +16,9 @@ public class BeatManager : MonoBehaviour
     public float songPosInBeats;
     private float songStartTime;
 
+    public AudioSource music;
+    public AudioSource damageSound;
+
     public float beatsShownInAdvance;
     private List<float> notes = new List<float>();
     private List<float> smashNotes = new List<float>();
@@ -35,7 +38,6 @@ public class BeatManager : MonoBehaviour
     [HideInInspector]
     public bool gameIsPaused = false;
     private bool notesMove = false;
-    public AudioSource music;
     public GameObject noteHolder;
     public float offsetInBeats;
 
@@ -214,7 +216,7 @@ public class BeatManager : MonoBehaviour
     {
         points += pointsPerSmashHit;
         smashHits++;
-        StartCoroutine("Flash");
+        StartCoroutine("SmashFlash");
 
         pointsText.text = "" + points.ToString();
     }
@@ -233,7 +235,7 @@ public class BeatManager : MonoBehaviour
 
     IEnumerator Flash()
     {
-        if(combo % 10f == 0f)
+        if(combo % 10f == 0f && combo != 0)
         {
             comboParticle.Play();
         }
@@ -241,6 +243,20 @@ public class BeatManager : MonoBehaviour
         hitFlash.SetActive(true);
         yield return new WaitForSeconds(0.05f);
         hitFlash.SetActive(false);
+    }
+
+    IEnumerator SmashFlash()
+    {
+        comboParticle.Play();
+
+        hitFlash.SetActive(true);
+        yield return new WaitForSeconds(0.05f);
+        hitFlash.SetActive(false);
+    }
+
+    public void ComboParticle()
+    {
+        comboParticle.Play();
     }
 
     public void SmashFeedback()
@@ -306,6 +322,7 @@ public class BeatManager : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        damageSound.Play();
         hp -= damage;
 
         if(hp <= 0)

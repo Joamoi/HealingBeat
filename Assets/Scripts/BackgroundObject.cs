@@ -5,12 +5,12 @@ using UnityEngine;
 public class BackgroundObject : MonoBehaviour
 {
     private float moveSpeed;
-    public float yPosition;
+    //public float yPosition;
 
     // Start is called before the first frame update
     void Start()
     {
-        transform.position += new Vector3(0f, yPosition, 0f);
+        //transform.position += new Vector3(0f, yPosition, 0f);
         
         moveSpeed = Background.backgroundMoveSpeed;
     }
