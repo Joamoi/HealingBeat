@@ -100,10 +100,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canBePressed: 0
-  keyToPress1: 119
+  keyToPress1: 275
   keyToPress2: 100
-  keyToPress3: 273
-  keyToPress4: 275
   travelDistance: 10
   buttonPosX: -3.4
   beatOfThisNote: 0

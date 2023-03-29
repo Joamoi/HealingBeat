@@ -241,7 +241,8 @@ public class WalkManager : MonoBehaviour
 
                     for (int i = 0; i < lights.Count; i++)
                     {
-                        StartCoroutine("LightIntensify", lights[i]);
+                        StartCoroutine("PPIntensify");
+                        //StartCoroutine("LightIntensify", lights[i]);
                     }
 
                     // only move if there are no obstacles or enemies
@@ -302,7 +303,8 @@ public class WalkManager : MonoBehaviour
 
             for (int i = 0; i < lights.Count; i++)
             {
-                StartCoroutine("LightIntensify", lights[i]);
+                StartCoroutine("PPIntensify");
+                //StartCoroutine("LightIntensify", lights[i]);
             }
         }
 
@@ -377,36 +379,43 @@ public class WalkManager : MonoBehaviour
         musicPlaying = true;
     }
 
-    IEnumerator LightIntensify(Light light)
+    IEnumerator PPIntensify()
     {
         volume.profile.TryGet<Bloom>(out bloom);
         volume.profile.TryGet<ColorAdjustments>(out colorAdj);
 
         float originalBloomThresh = bloom.threshold.value;
         float originalPostExpo = colorAdj.postExposure.value;
+
+        bloom.threshold.value -= 0.5f * bloomThreshold;
+        colorAdj.postExposure.value += 0.5f * postExposure;
+
+        yield return new WaitForSeconds(lightDuration / 3f);
+
+        bloom.threshold.value -= 0.5f * bloomThreshold;
+        colorAdj.postExposure.value += 0.5f * postExposure;
+
+        yield return new WaitForSeconds(lightDuration / 3f);
+
+        bloom.threshold.value += 0.5f * bloomThreshold;
+        colorAdj.postExposure.value -= 0.5f * postExposure;
+
+        yield return new WaitForSeconds(lightDuration / 3f);
+
+        bloom.threshold.value += 0.5f * bloomThreshold;
+        colorAdj.postExposure.value -= 0.5f * postExposure;
+    }
+
+    IEnumerator LightIntensify(Light light)
+    {
         float originalIntensity = light.intensity;
 
-        bloom.threshold.value -= 0.5f * bloomThreshold;
-        colorAdj.postExposure.value += 0.5f * postExposure;
         light.intensity += 0.5f * lightMultiplier * originalIntensity;
-
         yield return new WaitForSeconds(lightDuration / 3f);
-
-        bloom.threshold.value -= 0.5f * bloomThreshold;
-        colorAdj.postExposure.value += 0.5f * postExposure;
         light.intensity += 0.5f * lightMultiplier * originalIntensity;
-
         yield return new WaitForSeconds(lightDuration / 3f);
-
-        bloom.threshold.value += 0.5f * bloomThreshold;
-        colorAdj.postExposure.value -= 0.5f * postExposure;
         light.intensity -= 0.5f * lightMultiplier * originalIntensity;
-
         yield return new WaitForSeconds(lightDuration / 3f);
-
-        bloom.threshold.value += 0.5f * bloomThreshold;
-        colorAdj.postExposure.value -= 0.5f * postExposure;
         light.intensity -= 0.5f * lightMultiplier * originalIntensity;
-
     }
 }
