@@ -23896,7 +23896,6 @@ MonoBehaviour:
   beatsShownInAdvance: 3
   battleOn: 0
   lineBar: {fileID: 714920900}
-  lineBarBattleColor: {r: 1, g: 0.5990566, b: 0.5990566, a: 0.03529412}
   symbolAnimator: {fileID: 1559018975}
   healParticle: {fileID: 1429300712}
   jumpParticle: {fileID: 1956256856}
@@ -23920,6 +23919,8 @@ MonoBehaviour:
   lightMultiplier: 1
   bloomThreshold: 0.3
   postExposure: 0.15
+  chroAbIntensity: 0.1
+  vignetteIntensity: 0.15
   lightDuration: 0.15
   leftBunny: {fileID: 1425497803}
   rightBunny: {fileID: 872739059}

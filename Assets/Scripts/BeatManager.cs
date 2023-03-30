@@ -108,6 +108,7 @@ public class BeatManager : MonoBehaviour
             return;
         }
 
+        // beat is based on dsptime which is more accurate
         // keep track of current beat
         songPosInSecs = (float)(AudioSettings.dspTime - songStartTime);
         songPosInBeats = songPosInSecs / secPerBeat;

@@ -40,8 +40,6 @@ public class WalkManager : MonoBehaviour
     [HideInInspector]
     public bool battleOn = false;
     public SpriteRenderer lineBar;
-    private Color lineBarOriginalColor;
-    public Color lineBarBattleColor;
     public Animator symbolAnimator;
     public ParticleSystem healParticle;
     public ParticleSystem jumpParticle;
@@ -72,10 +70,14 @@ public class WalkManager : MonoBehaviour
     public Volume volume;
     private Bloom bloom;
     private ColorAdjustments colorAdj;
+    private ChromaticAberration chroAb;
+    private Vignette vignette;
     private List<Light> lights = new List<Light>();
     public float lightMultiplier;
     public float bloomThreshold;
     public float postExposure;
+    public float chroAbIntensity;
+    public float vignetteIntensity;
     public float lightDuration = 0.15f;
 
     public SpriteRenderer leftBunny;
@@ -124,7 +126,6 @@ public class WalkManager : MonoBehaviour
         hp100PosX = hpMask.transform.position.x;
         hp0PosX = hp100PosX - 1.15f;
         hpMax = hp;
-        lineBarOriginalColor = lineBar.color;
         bunnies[0] = leftBunny; bunnies[1] = rightBunny;
         bunnyValues[0] = -1; bunnyValues[1] = 1;
         walkTimeCounter = 0;
@@ -154,6 +155,7 @@ public class WalkManager : MonoBehaviour
 
         // BEAT
 
+        // beat is based on dsptime which is more accurate
         songPosInSecs = (float)(AudioSettings.dspTime - songStartTime);
         songPosInBeats = songPosInSecs / secPerBeat;
 
@@ -328,7 +330,7 @@ public class WalkManager : MonoBehaviour
 
                     battleOn = true;
                     canMove = false;
-                    lineBar.color = lineBarBattleColor;
+                    StartCoroutine("StartBattlePP");
 
                     RandomBunny();
                 }
@@ -401,7 +403,7 @@ public class WalkManager : MonoBehaviour
         leftBunny.enabled = false;
         rightBunny.enabled = false;
         battleOn = false;
-        lineBar.color = lineBarOriginalColor;
+        StartCoroutine("EndBattlePP");
     }
 
     public void Respawn()
@@ -435,8 +437,8 @@ public class WalkManager : MonoBehaviour
         volume.profile.TryGet<Bloom>(out bloom);
         volume.profile.TryGet<ColorAdjustments>(out colorAdj);
 
-        float originalBloomThresh = bloom.threshold.value;
-        float originalPostExpo = colorAdj.postExposure.value;
+        //float originalBloomThresh = bloom.threshold.value;
+        //float originalPostExpo = colorAdj.postExposure.value;
 
         bloom.threshold.value -= 0.5f * bloomThreshold;
         colorAdj.postExposure.value += 0.5f * postExposure;
@@ -468,6 +470,39 @@ public class WalkManager : MonoBehaviour
         light.intensity -= 0.5f * lightMultiplier * originalIntensity;
         yield return new WaitForSeconds(lightDuration / 3f);
         light.intensity -= 0.5f * lightMultiplier * originalIntensity;
+    }
+
+    IEnumerator StartBattlePP()
+    {
+        volume.profile.TryGet<ChromaticAberration>(out chroAb);
+        volume.profile.TryGet<ColorAdjustments>(out colorAdj);
+        volume.profile.TryGet<Vignette>(out vignette);
+
+        chroAb.intensity.value += 0.5f * bloomThreshold;
+        colorAdj.postExposure.value -= 0.5f * postExposure;
+        vignette.intensity.value += 0.5f * vignetteIntensity;
+
+        yield return new WaitForSeconds(0.1f);
+
+        chroAb.intensity.value += 0.5f * bloomThreshold;
+        colorAdj.postExposure.value -= 0.5f * postExposure;
+        vignette.intensity.value += 0.5f * vignetteIntensity;
+    }
+
+    IEnumerator EndBattlePP()
+    {
+        volume.profile.TryGet<ChromaticAberration>(out chroAb);
+        volume.profile.TryGet<ColorAdjustments>(out colorAdj);
+
+        chroAb.intensity.value -= 0.5f * bloomThreshold;
+        colorAdj.postExposure.value += 0.5f * postExposure;
+        vignette.intensity.value -= 0.5f * vignetteIntensity;
+
+        yield return new WaitForSeconds(0.1f);
+
+        chroAb.intensity.value -= 0.5f * bloomThreshold;
+        colorAdj.postExposure.value += 0.5f * postExposure;
+        vignette.intensity.value -= 0.5f * vignetteIntensity;
     }
 
     public void HealSound()
