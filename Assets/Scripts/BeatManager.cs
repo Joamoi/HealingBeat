@@ -76,11 +76,15 @@ public class BeatManager : MonoBehaviour
     void Start()
     {
         beatInstance = this;
+        Cursor.visible = false;
 
         if (GameObject.FindGameObjectsWithTag("Progress").Length == 0)
         {
             Instantiate(progressPrefab);
         }
+
+        ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+        progressManager.previousScene = "BattleScene";
 
         CreateNotes();
 

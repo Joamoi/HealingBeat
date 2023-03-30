@@ -10,6 +10,7 @@ public class WalkManager : MonoBehaviour
 {
     public static WalkManager walkInstance;
     public GameObject progressPrefab;
+    public GameObject startTutorial;
 
     public float songBpm;
     private float secPerBeat;
@@ -91,6 +92,7 @@ public class WalkManager : MonoBehaviour
     private void Awake()
     {
         walkInstance = this;
+        Cursor.visible = false;
 
         if (GameObject.FindGameObjectsWithTag("Progress").Length == 0)
         {
@@ -99,6 +101,14 @@ public class WalkManager : MonoBehaviour
 
         ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
         progressManager.CreateNPCList();
+
+        if (progressManager.previousScene == "MainMenu")
+        {
+            startTutorial.SetActive(true);
+            Cursor.visible = true;
+        }
+
+        progressManager.previousScene = "WorldScene";
 
         if (progressManager.bossReached)
         {

@@ -8,6 +8,10 @@ using UnityEngine.UI;
 public class PauseMenuManager : MonoBehaviour
 {
     public GameObject pauseMenu;
+    public GameObject pauseButtons;
+    public GameObject tutorialButtons;
+    public GameObject startTutorial;
+    private bool inTutorial = false;
 
     public AudioMixer audioMixer;
     public Slider musicSlider;
@@ -32,13 +36,20 @@ public class PauseMenuManager : MonoBehaviour
     void Update()
     {
         // escape button pauses/resumes game
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
         {
             if (SceneManager.GetActiveScene().name == "WorldScene" || SceneManager.GetActiveScene().name == "XTESTWorld")
             {
                 if (WalkManager.walkInstance.gameIsPaused)
                 {
-                    Resume();
+                    if (inTutorial)
+                    {
+                        Back();
+                    }
+                    else
+                    {
+                        Resume();
+                    }
                 }
                 else
                 {
@@ -50,7 +61,14 @@ public class PauseMenuManager : MonoBehaviour
             {
                 if (BeatManager.beatInstance.gameIsPaused)
                 {
-                    Resume();
+                    if (inTutorial)
+                    {
+                        Back();
+                    }
+                    else
+                    {
+                        Resume();
+                    }
                 }
                 else
                 {
@@ -95,6 +113,20 @@ public class PauseMenuManager : MonoBehaviour
         AudioListener.pause = false;
     }
 
+    public void Tutorial()
+    {
+        pauseButtons.SetActive(false);
+        tutorialButtons.SetActive(true);
+        inTutorial = true;
+    }
+
+    public void Back()
+    {
+        tutorialButtons.SetActive(false);
+        pauseButtons.SetActive(true);
+        inTutorial = false;
+    }
+
     public void QuitGame()
     {
         Application.Quit();
@@ -121,5 +153,10 @@ public class PauseMenuManager : MonoBehaviour
     public void ButtonAnimation(Animator animator)
     {
         animator.SetTrigger("ButtonMove");
+    }
+
+    public void OK()
+    {
+        startTutorial.SetActive(false);
     }
 }
