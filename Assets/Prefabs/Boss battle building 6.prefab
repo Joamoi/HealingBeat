@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2752564294846414488}
   - component: {fileID: -3504126953292706968}
+  - component: {fileID: 5562116675029224515}
   m_Layer: 0
   m_Name: Boss battle building 6
   m_TagString: Untagged
@@ -45,7 +46,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b432284f4033aaa4da6fe3e77dcb8dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  yPosition: -22.37934
+--- !u!65 &5562116675029224515
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 201417209041868995}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 9.118261, y: 9.59316, z: 7.70133}
+  m_Center: {x: 0.7089548, y: 4.296578, z: 0.45240033}
 --- !u!1001 &7540232338429363278
 PrefabInstance:
   m_ObjectHideFlags: 0
