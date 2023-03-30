@@ -41,4 +41,9 @@ public class EndManager : MonoBehaviour
         Cursor.visible = true;
         buttons.SetActive(true);
     }
+
+    public void ButtonAnimation(Animator animator)
+    {
+        animator.SetTrigger("ButtonMove");
+    }
 }

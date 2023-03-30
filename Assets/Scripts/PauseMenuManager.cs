@@ -117,4 +117,9 @@ public class PauseMenuManager : MonoBehaviour
 
         //testEffectSound.Play(0);
     }
+
+    public void ButtonAnimation(Animator animator)
+    {
+        animator.SetTrigger("ButtonMove");
+    }
 }
