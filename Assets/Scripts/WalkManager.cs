@@ -52,6 +52,10 @@ public class WalkManager : MonoBehaviour
     public float moveSpeed = 4f;
     public bool canMove = true;
     private int walkCombo = 0;
+    private float walkTimeCheck1;
+    private float walkTimeCheck2;
+    private int walkTimeCounter;
+    public float speedingThreshold = 1.5f;
     public Transform bossRespawnPos;
 
     public LayerMask obstacles;
@@ -113,6 +117,9 @@ public class WalkManager : MonoBehaviour
         lineBarOriginalColor = lineBar.color;
         bunnies[0] = leftBunny; bunnies[1] = rightBunny;
         bunnyValues[0] = -1; bunnyValues[1] = 1;
+        walkTimeCounter = 0;
+        walkTimeCheck1 = -99f;
+        walkTimeCheck2 = -49f;
 
         // gather all lights for intensify
         GameObject[] lightObjects = GameObject.FindGameObjectsWithTag("Light");
@@ -214,6 +221,35 @@ public class WalkManager : MonoBehaviour
         Vector3 faceDir = targetPos - transform.position;
         float angle = Vector3.SignedAngle(playerModel.transform.forward, faceDir, Vector3.up);
         playerModel.transform.RotateAround(transform.position, Vector3.up, angle);
+
+        // player takes damage if it walks too fast
+        walkTimeCounter++;
+
+        if (walkTimeCounter == 1)
+        {
+            walkTimeCheck1 = songPosInBeats;
+        }
+
+        if (walkTimeCounter == 4)
+        {
+            walkTimeCheck2 = songPosInBeats;
+        }
+
+        if ((walkTimeCheck2 - walkTimeCheck1) < speedingThreshold && (walkTimeCheck2 - walkTimeCheck1) > 0)
+        {
+            TakeDamage();
+            walkCombo = 0;
+            walkTimeCounter = 0;
+            walkTimeCheck1 = -99f;
+            walkTimeCheck2 = -49f;
+            canMove = false;
+            return;
+        }
+
+        if (walkTimeCounter > 4)
+        {
+            walkTimeCounter = 0;
+        }
 
         // only move if player has reached the movepoint
         if (Vector3.Distance(transform.position, movePoint.position) == 0f)

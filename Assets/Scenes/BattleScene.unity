@@ -3992,6 +3992,11 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 477307044243337284, guid: a70193929c6c2be47af1ada9f0748c82,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 92c1c33ca35410a458ec6820e1348436, type: 2}
     - target: {fileID: 477307044243337306, guid: a70193929c6c2be47af1ada9f0748c82,
         type: 3}
       propertyPath: m_Layer
