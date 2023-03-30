@@ -96,6 +96,7 @@ public class BeatManager : MonoBehaviour
         hpMax = hp;
         progressBarStartPos = progressBar.transform.position;
         progressBarEndPos = new Vector3(0f, -4.86f, 0f);
+        saturationMaterial.SetFloat("_SatValue", 0f);
 
         StartCoroutine("StartMusic");
     }
@@ -147,6 +148,11 @@ public class BeatManager : MonoBehaviour
 
             float saturationValue = Mathf.Lerp(0f, 1f, songPosInSecs / music.clip.length);
             saturationMaterial.SetFloat("_SatValue", saturationValue);
+
+            if (saturationValue == 1f)
+            {
+                StartCoroutine("EndScreen");
+            }
         }
     }
 

@@ -229,6 +229,8 @@ public class WalkManager : MonoBehaviour
 
     public void TryToMove(Vector3 targetPos)
     {
+        canMove = false;
+
         // turn the player to face the direction it's trying to move
         Vector3 faceDir = targetPos - transform.position;
         float angle = Vector3.SignedAngle(playerModel.transform.forward, faceDir, Vector3.up);
@@ -254,7 +256,6 @@ public class WalkManager : MonoBehaviour
             walkTimeCounter = 0;
             walkTimeCheck1 = -99f;
             walkTimeCheck2 = -49f;
-            canMove = false;
             return;
         }
 
@@ -270,7 +271,6 @@ public class WalkManager : MonoBehaviour
             if (Physics.OverlapSphere(targetPos, .2f, obstacles).Length == 0 && Physics.OverlapSphere(targetPos, .2f, enemies).Length == 0)
             {
                 movePoint.position = targetPos;
-                canMove = false;
 
                 float oldSongPosRounded = songPosRounded;
                 songPosRounded = Mathf.Round(songPosInBeats - beatDiffFix);
