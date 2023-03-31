@@ -3864,6 +3864,7 @@ MonoBehaviour:
   pauseMenu: {fileID: 321909521}
   pauseButtons: {fileID: 2013287431}
   tutorialButtons: {fileID: 1455969836}
+  startTutorial: {fileID: 0}
   audioMixer: {fileID: 24100000, guid: 56d67741b81d6494f82bcc3b71d32b66, type: 2}
   musicSlider: {fileID: 1415337396}
   effectsSlider: {fileID: 836858671}
@@ -5325,15 +5326,15 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: 10
       objectReference: {fileID: 0}
-    - target: {fileID: 477307044243337284, guid: a70193929c6c2be47af1ada9f0748c82,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 92c1c33ca35410a458ec6820e1348436, type: 2}
     - target: {fileID: 477307044243337306, guid: a70193929c6c2be47af1ada9f0748c82,
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 477307044243337306, guid: a70193929c6c2be47af1ada9f0748c82,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a70193929c6c2be47af1ada9f0748c82, type: 3}
