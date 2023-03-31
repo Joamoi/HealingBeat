@@ -448,7 +448,7 @@ public class WalkManager : MonoBehaviour
         playerStopped = true;
         bossTransition.Play();
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2.5f);
 
         ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
         progressManager.bossReached = true;
