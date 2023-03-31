@@ -10,6 +10,7 @@ public class WalkManager : MonoBehaviour
 {
     public static WalkManager walkInstance;
     public GameObject progressPrefab;
+    public GameObject startTutorial;
 
     public float songBpm;
     private float secPerBeat;
@@ -39,8 +40,6 @@ public class WalkManager : MonoBehaviour
     [HideInInspector]
     public bool battleOn = false;
     public SpriteRenderer lineBar;
-    private Color lineBarOriginalColor;
-    public Color lineBarBattleColor;
     public Animator symbolAnimator;
     public ParticleSystem healParticle;
     public ParticleSystem jumpParticle;
@@ -50,16 +49,18 @@ public class WalkManager : MonoBehaviour
     public Transform movePoint;
     public Transform attackPoint;
     public float moveSpeed = 4f;
-    public bool canMove = true;
+    private bool canMove = true;
+    private bool playerStopped = false;
     private int walkCombo = 0;
     private float walkTimeCheck1;
     private float walkTimeCheck2;
     private int walkTimeCounter;
     public float speedingThreshold = 1.5f;
-    public Transform bossRespawnPos;
 
     public LayerMask obstacles;
     public LayerMask enemies;
+    public Transform bossRespawnPos;
+    public ParticleSystem bossTransition;
 
     public GameObject hpMask;
     private float hp0PosX;
@@ -71,17 +72,24 @@ public class WalkManager : MonoBehaviour
     public Volume volume;
     private Bloom bloom;
     private ColorAdjustments colorAdj;
+    private ChromaticAberration chroAb;
+    private Vignette vignette;
     private List<Light> lights = new List<Light>();
     public float lightMultiplier;
     public float bloomThreshold;
     public float postExposure;
+    public float chroAbIntensity;
+    public float vignetteIntensity;
     public float lightDuration = 0.15f;
 
+    public SpriteRenderer leftBunnyIdle;
+    public SpriteRenderer rightBunnyIdle;
     public SpriteRenderer leftBunny;
     public SpriteRenderer rightBunny;
     public Animator leftBunnyAnimator;
     public Animator rightBunnyAnimator;
     private SpriteRenderer[] bunnies = new SpriteRenderer[2];
+    private SpriteRenderer[] idleBunnies = new SpriteRenderer[2];
     private float[] bunnyValues = new float[2];
     private float bunnyValue = 0f;
     private GameObject npcObject;
@@ -91,6 +99,7 @@ public class WalkManager : MonoBehaviour
     private void Awake()
     {
         walkInstance = this;
+        Cursor.visible = false;
 
         if (GameObject.FindGameObjectsWithTag("Progress").Length == 0)
         {
@@ -99,6 +108,14 @@ public class WalkManager : MonoBehaviour
 
         ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
         progressManager.CreateNPCList();
+
+        if (progressManager.previousScene == "MainMenu")
+        {
+            startTutorial.SetActive(true);
+            Cursor.visible = true;
+        }
+
+        progressManager.previousScene = "WorldScene";
 
         if (progressManager.bossReached)
         {
@@ -114,8 +131,9 @@ public class WalkManager : MonoBehaviour
         hp100PosX = hpMask.transform.position.x;
         hp0PosX = hp100PosX - 1.15f;
         hpMax = hp;
-        lineBarOriginalColor = lineBar.color;
+
         bunnies[0] = leftBunny; bunnies[1] = rightBunny;
+        idleBunnies[0] = rightBunnyIdle; idleBunnies[1] = leftBunnyIdle;
         bunnyValues[0] = -1; bunnyValues[1] = 1;
         walkTimeCounter = 0;
         walkTimeCheck1 = -99f;
@@ -144,6 +162,7 @@ public class WalkManager : MonoBehaviour
 
         // BEAT
 
+        // beat is based on dsptime which is more accurate
         songPosInSecs = (float)(AudioSettings.dspTime - songStartTime);
         songPosInBeats = songPosInSecs / secPerBeat;
 
@@ -181,12 +200,12 @@ public class WalkManager : MonoBehaviour
         float moveVert = Input.GetAxisRaw("Vertical");
 
         // check hori and vert movement separately to disable diagonal movement
-        if (Mathf.Abs(moveHori) == 1f && canMove)
+        if (Mathf.Abs(moveHori) == 1f && canMove && !playerStopped)
         {
             Vector3 targetPos = transform.position + new Vector3(moveHori, 0f, 0f);
             TryToMove(targetPos);
         }
-        else if (Mathf.Abs(moveVert) == 1f && canMove)
+        else if (Mathf.Abs(moveVert) == 1f && canMove && !playerStopped)
         {
             Vector3 targetPos = transform.position + new Vector3(0f, 0f, moveVert);
             TryToMove(targetPos);
@@ -217,6 +236,8 @@ public class WalkManager : MonoBehaviour
 
     public void TryToMove(Vector3 targetPos)
     {
+        canMove = false;
+
         // turn the player to face the direction it's trying to move
         Vector3 faceDir = targetPos - transform.position;
         float angle = Vector3.SignedAngle(playerModel.transform.forward, faceDir, Vector3.up);
@@ -242,7 +263,6 @@ public class WalkManager : MonoBehaviour
             walkTimeCounter = 0;
             walkTimeCheck1 = -99f;
             walkTimeCheck2 = -49f;
-            canMove = false;
             return;
         }
 
@@ -258,7 +278,6 @@ public class WalkManager : MonoBehaviour
             if (Physics.OverlapSphere(targetPos, .2f, obstacles).Length == 0 && Physics.OverlapSphere(targetPos, .2f, enemies).Length == 0)
             {
                 movePoint.position = targetPos;
-                canMove = false;
 
                 float oldSongPosRounded = songPosRounded;
                 songPosRounded = Mathf.Round(songPosInBeats - beatDiffFix);
@@ -313,14 +332,23 @@ public class WalkManager : MonoBehaviour
                 if (enemy.Length > 0)
                 {
                     npcObject = enemy[0].transform.gameObject;
-                    WorldNpc npc = npcObject.GetComponent<WorldNpc>();
-                    npc.hpObject.SetActive(true);
 
-                    battleOn = true;
-                    canMove = false;
-                    lineBar.color = lineBarBattleColor;
+                    if (npcObject.tag == "Boss")
+                    {
+                        StartCoroutine("Boss");
+                    }
 
-                    RandomBunny();
+                    else
+                    {
+                        WorldNpc npc = npcObject.GetComponent<WorldNpc>();
+                        npc.hpObject.SetActive(true);
+
+                        battleOn = true;
+                        canMove = false;
+                        StartCoroutine("StartBattlePP");
+
+                        RandomBunny();
+                    }
                 }
             }
         }
@@ -368,6 +396,7 @@ public class WalkManager : MonoBehaviour
         int randomBunny = Random.Range(0, 2);
 
         bunnies[randomBunny].enabled = true;
+        idleBunnies[randomBunny].enabled = true;
         bunnyValue = bunnyValues[randomBunny];
     }
 
@@ -390,8 +419,10 @@ public class WalkManager : MonoBehaviour
     {
         leftBunny.enabled = false;
         rightBunny.enabled = false;
+        leftBunnyIdle.enabled = false;
+        rightBunnyIdle.enabled = false;
         battleOn = false;
-        lineBar.color = lineBarOriginalColor;
+        StartCoroutine("EndBattlePP");
     }
 
     public void Respawn()
@@ -420,13 +451,34 @@ public class WalkManager : MonoBehaviour
         musicPlaying = true;
     }
 
+    IEnumerator Boss()
+    {
+        playerStopped = true;
+        bossTransition.Play();
+
+        yield return new WaitForSeconds(2.5f);
+
+        ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+        progressManager.bossReached = true;
+
+        if (SceneManager.GetActiveScene().name == "WorldScene")
+        {
+            SceneManager.LoadScene("BattleScene");
+        }
+
+        else
+        {
+            SceneManager.LoadScene("XTESTBattle");
+        }
+    }
+
     IEnumerator PPIntensify()
     {
         volume.profile.TryGet<Bloom>(out bloom);
         volume.profile.TryGet<ColorAdjustments>(out colorAdj);
 
-        float originalBloomThresh = bloom.threshold.value;
-        float originalPostExpo = colorAdj.postExposure.value;
+        //float originalBloomThresh = bloom.threshold.value;
+        //float originalPostExpo = colorAdj.postExposure.value;
 
         bloom.threshold.value -= 0.5f * bloomThreshold;
         colorAdj.postExposure.value += 0.5f * postExposure;
@@ -458,6 +510,39 @@ public class WalkManager : MonoBehaviour
         light.intensity -= 0.5f * lightMultiplier * originalIntensity;
         yield return new WaitForSeconds(lightDuration / 3f);
         light.intensity -= 0.5f * lightMultiplier * originalIntensity;
+    }
+
+    IEnumerator StartBattlePP()
+    {
+        volume.profile.TryGet<ChromaticAberration>(out chroAb);
+        volume.profile.TryGet<ColorAdjustments>(out colorAdj);
+        volume.profile.TryGet<Vignette>(out vignette);
+
+        chroAb.intensity.value += 0.5f * bloomThreshold;
+        colorAdj.postExposure.value -= 0.5f * postExposure;
+        vignette.intensity.value += 0.5f * vignetteIntensity;
+
+        yield return new WaitForSeconds(0.1f);
+
+        chroAb.intensity.value += 0.5f * bloomThreshold;
+        colorAdj.postExposure.value -= 0.5f * postExposure;
+        vignette.intensity.value += 0.5f * vignetteIntensity;
+    }
+
+    IEnumerator EndBattlePP()
+    {
+        volume.profile.TryGet<ChromaticAberration>(out chroAb);
+        volume.profile.TryGet<ColorAdjustments>(out colorAdj);
+
+        chroAb.intensity.value -= 0.5f * bloomThreshold;
+        colorAdj.postExposure.value += 0.5f * postExposure;
+        vignette.intensity.value -= 0.5f * vignetteIntensity;
+
+        yield return new WaitForSeconds(0.1f);
+
+        chroAb.intensity.value -= 0.5f * bloomThreshold;
+        colorAdj.postExposure.value += 0.5f * postExposure;
+        vignette.intensity.value -= 0.5f * vignetteIntensity;
     }
 
     public void HealSound()

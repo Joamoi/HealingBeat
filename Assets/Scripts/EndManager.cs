@@ -7,9 +7,20 @@ using UnityEngine.UI;
 public class EndManager : MonoBehaviour
 {
     public GameObject buttons;
+    public GameObject progressPrefab;
 
     void Start()
     {
+        Cursor.visible = false;
+
+        if (GameObject.FindGameObjectsWithTag("Progress").Length == 0)
+        {
+            Instantiate(progressPrefab);
+        }
+
+        ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+        progressManager.previousScene = "EndScene";
+
         StartCoroutine("ShowButtons");
     }
 

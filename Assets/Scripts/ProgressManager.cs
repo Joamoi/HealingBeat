@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class ProgressManager : MonoBehaviour
 {
     // keeps track of progress like npc heals
-
     [HideInInspector]
     public bool bossReached = false;
     [HideInInspector]
@@ -15,6 +14,8 @@ public class ProgressManager : MonoBehaviour
     public List<int> npcStates = new List<int>();
     [HideInInspector]
     public bool resetNPCs = true;
+    [HideInInspector]
+    public string previousScene;
 
     // this object isn't destroyed between scenes
     void Awake()

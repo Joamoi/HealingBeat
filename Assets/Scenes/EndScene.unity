@@ -1452,6 +1452,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttons: {fileID: 1100826153}
+  progressPrefab: {fileID: 3011908972496604480, guid: 1114c3dcaef270f4c967d51ec810f30b,
+    type: 3}
 --- !u!1 &1683976807
 GameObject:
   m_ObjectHideFlags: 0

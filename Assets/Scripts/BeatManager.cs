@@ -76,11 +76,15 @@ public class BeatManager : MonoBehaviour
     void Start()
     {
         beatInstance = this;
+        Cursor.visible = false;
 
         if (GameObject.FindGameObjectsWithTag("Progress").Length == 0)
         {
             Instantiate(progressPrefab);
         }
+
+        ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+        progressManager.previousScene = "BattleScene";
 
         CreateNotes();
 
@@ -92,6 +96,7 @@ public class BeatManager : MonoBehaviour
         hpMax = hp;
         progressBarStartPos = progressBar.transform.position;
         progressBarEndPos = new Vector3(0f, -4.86f, 0f);
+        saturationMaterial.SetFloat("_SatValue", 0f);
 
         StartCoroutine("StartMusic");
     }
@@ -104,6 +109,7 @@ public class BeatManager : MonoBehaviour
             return;
         }
 
+        // beat is based on dsptime which is more accurate
         // keep track of current beat
         songPosInSecs = (float)(AudioSettings.dspTime - songStartTime);
         songPosInBeats = songPosInSecs / secPerBeat;
@@ -142,6 +148,11 @@ public class BeatManager : MonoBehaviour
 
             float saturationValue = Mathf.Lerp(0f, 1f, songPosInSecs / music.clip.length);
             saturationMaterial.SetFloat("_SatValue", saturationValue);
+
+            if (saturationValue == 1f)
+            {
+                StartCoroutine("EndScreen");
+            }
         }
     }
 

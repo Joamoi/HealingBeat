@@ -21,7 +21,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Wave
-  m_Shader: {fileID: -6465566751694194690, guid: 16a94bc1759376f45a6a2fcf0ea72341, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 16a94bc1759376f45a6a2fcf0ea72341,
+    type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -95,7 +96,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AddIntensity: 3
+    - _AddIntensity: 10
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
