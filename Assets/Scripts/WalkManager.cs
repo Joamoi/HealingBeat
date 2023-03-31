@@ -82,11 +82,14 @@ public class WalkManager : MonoBehaviour
     public float vignetteIntensity;
     public float lightDuration = 0.15f;
 
+    public SpriteRenderer leftBunnyIdle;
+    public SpriteRenderer rightBunnyIdle;
     public SpriteRenderer leftBunny;
     public SpriteRenderer rightBunny;
     public Animator leftBunnyAnimator;
     public Animator rightBunnyAnimator;
     private SpriteRenderer[] bunnies = new SpriteRenderer[2];
+    private SpriteRenderer[] idleBunnies = new SpriteRenderer[2];
     private float[] bunnyValues = new float[2];
     private float bunnyValue = 0f;
     private GameObject npcObject;
@@ -128,7 +131,9 @@ public class WalkManager : MonoBehaviour
         hp100PosX = hpMask.transform.position.x;
         hp0PosX = hp100PosX - 1.15f;
         hpMax = hp;
+
         bunnies[0] = leftBunny; bunnies[1] = rightBunny;
+        idleBunnies[0] = rightBunnyIdle; idleBunnies[1] = leftBunnyIdle;
         bunnyValues[0] = -1; bunnyValues[1] = 1;
         walkTimeCounter = 0;
         walkTimeCheck1 = -99f;
@@ -391,6 +396,7 @@ public class WalkManager : MonoBehaviour
         int randomBunny = Random.Range(0, 2);
 
         bunnies[randomBunny].enabled = true;
+        idleBunnies[randomBunny].enabled = true;
         bunnyValue = bunnyValues[randomBunny];
     }
 
@@ -413,6 +419,8 @@ public class WalkManager : MonoBehaviour
     {
         leftBunny.enabled = false;
         rightBunny.enabled = false;
+        leftBunnyIdle.enabled = false;
+        rightBunnyIdle.enabled = false;
         battleOn = false;
         StartCoroutine("EndBattlePP");
     }
