@@ -85,6 +85,7 @@ public class BeatManager : MonoBehaviour
 
         ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
         progressManager.previousScene = "BattleScene";
+        progressManager.bossReached = true;
 
         CreateNotes();
 
@@ -158,7 +159,7 @@ public class BeatManager : MonoBehaviour
 
     IEnumerator StartMusic()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
 
         // record the time when the music starts
         songStartTime = (float)AudioSettings.dspTime;
