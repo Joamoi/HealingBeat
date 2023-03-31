@@ -10,6 +10,7 @@ TagManager:
   - Light
   - Progress
   - NPCHolder
+  - Boss
   layers:
   - Default
   - TransparentFX

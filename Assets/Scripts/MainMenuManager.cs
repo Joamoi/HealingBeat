@@ -7,8 +7,12 @@ using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
+    public GameObject progressPrefab;
+
     public GameObject mainMenuButtons;
     public GameObject settingsButtons;
+    public GameObject tutorialButtons;
+    public GameObject logo;
 
     public AudioMixer audioMixer;
     public Slider musicSlider;
@@ -17,6 +21,14 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
+        if (GameObject.FindGameObjectsWithTag("Progress").Length == 0)
+        {
+            Instantiate(progressPrefab);
+        }
+
+        ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+        progressManager.previousScene = "MainMenu";
+
         if (!(PlayerPrefs.GetFloat("musicVol") == 0))
         {
             audioMixer.SetFloat("musicVolume", Mathf.Log10(PlayerPrefs.GetFloat("musicVol")) * 20);
@@ -32,8 +44,6 @@ public class MainMenuManager : MonoBehaviour
 
     public void PlayGame()
     {
-        Cursor.visible = false;
-
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             SceneManager.LoadScene("WorldScene");
@@ -74,9 +84,23 @@ public class MainMenuManager : MonoBehaviour
         //testEffectSound.Play(0);
     }
 
-    public void Back()
+    public void SettingsBack()
     {
         settingsButtons.SetActive(false);
+        mainMenuButtons.SetActive(true);
+    }
+
+    public void Tutorial()
+    {
+        logo.SetActive(false);
+        mainMenuButtons.SetActive(false);
+        tutorialButtons.SetActive(true);
+    }
+
+    public void TutorialBack()
+    {
+        tutorialButtons.SetActive(false);
+        logo.SetActive(true);
         mainMenuButtons.SetActive(true);
     }
 
