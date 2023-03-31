@@ -458,9 +458,6 @@ public class WalkManager : MonoBehaviour
 
         yield return new WaitForSeconds(2.5f);
 
-        ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
-        progressManager.bossReached = true;
-
         if (SceneManager.GetActiveScene().name == "WorldScene")
         {
             SceneManager.LoadScene("BattleScene");
