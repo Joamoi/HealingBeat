@@ -17778,9 +17778,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5830036a2ba9c7f41aa37babf56813ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movePoint:
-    serializedVersion: 2
-    m_Bits: 128
 --- !u!136 &1505325752
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -23904,15 +23901,15 @@ MonoBehaviour:
   movePoint: {fileID: 1861163985}
   attackPoint: {fileID: 772590451}
   moveSpeed: 10
-  canMove: 1
   speedingThreshold: 1.5
-  bossRespawnPos: {fileID: 584265189}
   obstacles:
     serializedVersion: 2
     m_Bits: 64
   enemies:
     serializedVersion: 2
     m_Bits: 256
+  bossRespawnPos: {fileID: 584265189}
+  bossTransition: {fileID: 0}
   hpMask: {fileID: 976763017}
   damagePerMiss: 10
   volume: {fileID: 832575518}
