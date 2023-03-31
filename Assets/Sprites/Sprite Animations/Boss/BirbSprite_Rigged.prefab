@@ -75,6 +75,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2560147513829418282}
   - component: {fileID: 2560147513829418709}
+  - component: {fileID: 2117033109495466700}
   - component: {fileID: 2560147513829418708}
   m_Layer: 0
   m_Name: BirbSprite_Rigged
@@ -151,6 +152,26 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &2117033109495466700
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2560147513829418711}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3edc931ac0dba9846b9783516e93eb8d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!114 &2560147513829418708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,7 +198,7 @@ MonoBehaviour:
   - {fileID: 2671861315042506001}
   m_Bounds:
     m_Center: {x: 0.009834528, y: 0.00026535988, z: 0}
-    m_Extent: {x: 2.9880354, y: 2.169736, z: 0}
+    m_Extent: {x: 2.9880357, y: 2.169736, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
