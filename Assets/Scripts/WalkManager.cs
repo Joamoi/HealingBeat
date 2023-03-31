@@ -32,6 +32,9 @@ public class WalkManager : MonoBehaviour
     public AudioSource healSound;
     public AudioSource jumpSound;
     public AudioSource damageSound;
+    public AudioSource bossTransitionSound;
+    private float originalMusicVol;
+    public float musicFadeBossDist = 10f;
 
     public GameObject lineHolder;
     public GameObject linePrefab;
@@ -63,6 +66,8 @@ public class WalkManager : MonoBehaviour
     public LayerMask enemies;
     public Transform bossRespawnPos;
     public ParticleSystem bossTransition;
+    public GameObject bossTransitionBackground;
+    public Transform boss;
 
     public GameObject hpMask;
     private float hp0PosX;
@@ -134,7 +139,7 @@ public class WalkManager : MonoBehaviour
         hp100PosX = hpMask.transform.position.x;
         hp0PosX = hp100PosX - 1.15f;
         hpMax = hp;
-
+        originalMusicVol = music.volume;
         bunnies[0] = leftBunny; bunnies[1] = rightBunny;
         idleBunnies[0] = rightBunnyIdle; idleBunnies[1] = leftBunnyIdle;
         bunnyValues[0] = -1; bunnyValues[1] = 1;
@@ -193,6 +198,12 @@ public class WalkManager : MonoBehaviour
             }
 
             Shader.SetGlobalFloat("_FlipBookTile", previousBeat);
+        }
+
+        float distance = Vector3.Distance(transform.position, boss.position);
+        if (distance < musicFadeBossDist)
+        {
+            MusicFadeBoss(distance);
         }
 
         // MOVE
@@ -461,8 +472,12 @@ public class WalkManager : MonoBehaviour
     {
         playerStopped = true;
         bossTransition.Play();
+        music.Stop();
+        bossTransitionSound.Play();
 
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(2.0f);
+        bossTransitionBackground.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
 
         if (SceneManager.GetActiveScene().name == "WorldScene")
         {
@@ -473,6 +488,12 @@ public class WalkManager : MonoBehaviour
         {
             SceneManager.LoadScene("XTESTBattle");
         }
+    }
+
+    public void MusicFadeBoss(float distance)
+    {
+        float volMultiplier = distance / musicFadeBossDist;
+        music.volume = volMultiplier * originalMusicVol;
     }
 
     IEnumerator PPIntensify()
