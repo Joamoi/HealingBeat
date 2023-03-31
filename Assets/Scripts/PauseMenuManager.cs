@@ -158,5 +158,6 @@ public class PauseMenuManager : MonoBehaviour
     public void OK()
     {
         startTutorial.SetActive(false);
+        WalkManager.walkInstance.playerStopped = false;
     }
 }

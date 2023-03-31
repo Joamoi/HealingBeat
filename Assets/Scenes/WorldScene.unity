@@ -7646,7 +7646,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0b54b7614c79d564d8491e84a0df1bb5, type: 2}
+  - {fileID: 2100000, guid: 4855cfaeb3e0c944db9cdb5273e18c59, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -30627,11 +30627,13 @@ MonoBehaviour:
   symbolAnimator: {fileID: 1559018975}
   healParticle: {fileID: 1429300712}
   jumpParticle: {fileID: 1956256856}
+  discoFloor: {fileID: 0}
   playerModel: {fileID: 834277102}
   animator: {fileID: 834277101}
   movePoint: {fileID: 1861163985}
   attackPoint: {fileID: 772590451}
   moveSpeed: 10
+  playerStopped: 0
   speedingThreshold: 1.5
   obstacles:
     serializedVersion: 2

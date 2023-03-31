@@ -43,6 +43,7 @@ public class WalkManager : MonoBehaviour
     public Animator symbolAnimator;
     public ParticleSystem healParticle;
     public ParticleSystem jumpParticle;
+    public Shader discoFloor;
 
     public Transform playerModel;
     public Animator animator;
@@ -50,7 +51,8 @@ public class WalkManager : MonoBehaviour
     public Transform attackPoint;
     public float moveSpeed = 4f;
     private bool canMove = true;
-    private bool playerStopped = false;
+    [HideInInspector]
+    public bool playerStopped = false;
     private int walkCombo = 0;
     private float walkTimeCheck1;
     private float walkTimeCheck2;
@@ -113,6 +115,7 @@ public class WalkManager : MonoBehaviour
         {
             startTutorial.SetActive(true);
             Cursor.visible = true;
+            playerStopped = true;
         }
 
         progressManager.previousScene = "WorldScene";
@@ -188,6 +191,8 @@ public class WalkManager : MonoBehaviour
                 leftBunnyAnimator.SetTrigger("Pulse");
                 rightBunnyAnimator.SetTrigger("Pulse");
             }
+
+            Shader.SetGlobalFloat("_FlipBookTile", previousBeat);
         }
 
         // MOVE
@@ -422,6 +427,7 @@ public class WalkManager : MonoBehaviour
         leftBunnyIdle.enabled = false;
         rightBunnyIdle.enabled = false;
         battleOn = false;
+        hp = 100f;
         StartCoroutine("EndBattlePP");
     }
 
