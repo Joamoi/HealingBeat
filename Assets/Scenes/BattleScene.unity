@@ -1625,7 +1625,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &316425929
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3962,7 +3962,6 @@ MonoBehaviour:
   pauseMenu: {fileID: 321909521}
   pauseButtons: {fileID: 2013287431}
   tutorialButtons: {fileID: 1455969836}
-  startTutorial: {fileID: 0}
   audioMixer: {fileID: 24100000, guid: 56d67741b81d6494f82bcc3b71d32b66, type: 2}
   musicSlider: {fileID: 1415337396}
   effectsSlider: {fileID: 836858671}
@@ -4492,7 +4491,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -8821507701479769757, guid: 56d67741b81d6494f82bcc3b71d32b66,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: ded93f6ba1ec14d438cf45ab85456ed8, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 4240b49763f58414383ba35d31f8c592, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1
@@ -7796,24 +7795,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   progressPrefab: {fileID: 3011908972496604480, guid: 1114c3dcaef270f4c967d51ec810f30b,
     type: 3}
-  songBpm: 130
+  songBpm: 160
   songPosInBeats: 0
   music: {fileID: 1048891001}
   damageSound: {fileID: 706210245}
-  beatsShownInAdvance: 5
+  fadeImage: {fileID: 316425928}
+  beatsShownInAdvance: 6
   noteSpawnPosX: 5
   hitFlash: {fileID: 708567910}
-  notePrefab1: {fileID: 640170177846006462, guid: 2d4b6c91cf12ab44e8b4f18bcc248124,
+  leftNotePrefab: {fileID: 640170177846006462, guid: 2d4b6c91cf12ab44e8b4f18bcc248124,
     type: 3}
-  notePrefab2: {fileID: 3809524344914322122, guid: 126ea6ecfaa4a444294357cf951491d0,
+  rightNotePrefab: {fileID: 3809524344914322122, guid: 126ea6ecfaa4a444294357cf951491d0,
     type: 3}
-  comboParticle: {fileID: 1206994286}
   smashNotePrefab: {fileID: 4671965059434732735, guid: f26293114502e1f4c990310ec295fbe2,
     type: 3}
-  smashHitsNeeded: 20
+  comboParticle: {fileID: 1206994286}
+  smashHitsNeeded: 30
   gameIsPaused: 0
   noteHolder: {fileID: 1408511494}
-  offsetInBeats: 0
+  offsetInBeats: 0.15
   comboText: {fileID: 1976583570}
   pointsText: {fileID: 30826033}
   feedbackText: {fileID: 604139330}
@@ -7822,8 +7822,8 @@ MonoBehaviour:
   pointsPerPerfectHit: 300
   pointsPerSmashHit: 50
   hpMask: {fileID: 2019044123}
-  damagePerMiss: 10
-  damagePerFail: 30
+  damagePerMiss: 5
+  damagePerFail: 15
   progressBar: {fileID: 411770425}
   saturationMaterial: {fileID: 2100000, guid: 026fd1230b7d66d40926013d6723613c, type: 2}
 --- !u!4 &1920254928

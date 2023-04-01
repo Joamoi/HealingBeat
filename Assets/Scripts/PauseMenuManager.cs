@@ -10,7 +10,6 @@ public class PauseMenuManager : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject pauseButtons;
     public GameObject tutorialButtons;
-    public GameObject startTutorial;
     private bool inTutorial = false;
 
     public AudioMixer audioMixer;
@@ -153,11 +152,5 @@ public class PauseMenuManager : MonoBehaviour
     public void ButtonAnimation(Animator animator)
     {
         animator.SetTrigger("ButtonMove");
-    }
-
-    public void OK()
-    {
-        startTutorial.SetActive(false);
-        WalkManager.walkInstance.playerStopped = false;
     }
 }

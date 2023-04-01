@@ -15,24 +15,29 @@ public class BeatManager : MonoBehaviour
     [HideInInspector]
     public float songPosInBeats;
     private float songStartTime;
+    private float beat;
 
     public AudioSource music;
     public AudioSource damageSound;
+    public GameObject fadeImage;
 
     public float beatsShownInAdvance;
-    private List<float> notes = new List<float>();
+    private List<float> leftNotes = new List<float>();
+    private List<float> rightNotes = new List<float>();
     private List<float> smashNotes = new List<float>();
-    private int nextIndex = 0;
+    private List<float> timedFeedbacks = new List<float>();
+    private List<string> timedFeedbackTexts = new List<string>();
+    private int nextLeftIndex = 0;
+    private int nextRightIndex = 0;
     private int nextSmashIndex = 0;
-    private int colorIndex;
+    private int nextFeedbackIndex = 0;
 
     public float noteSpawnPosX;
     public GameObject hitFlash;
-    public GameObject notePrefab1;
-    public GameObject notePrefab2;
-    public ParticleSystem comboParticle;
-    private GameObject[] colors = new GameObject[2];
+    public GameObject leftNotePrefab;
+    public GameObject rightNotePrefab;
     public GameObject smashNotePrefab;
+    public ParticleSystem comboParticle;
     public float smashHitsNeeded = 50f;
 
     [HideInInspector]
@@ -77,6 +82,7 @@ public class BeatManager : MonoBehaviour
     {
         beatInstance = this;
         Cursor.visible = false;
+        fadeImage.SetActive(true);
 
         if (GameObject.FindGameObjectsWithTag("Progress").Length == 0)
         {
@@ -89,7 +95,6 @@ public class BeatManager : MonoBehaviour
 
         CreateNotes();
 
-        colors[0] = notePrefab1; colors[1] = notePrefab2;
         secPerBeat = 60f / songBpm;
         combo = 0;
         hp100PosX = hpMask.transform.position.x;
@@ -118,17 +123,26 @@ public class BeatManager : MonoBehaviour
         if (notesMove)
         {
             // spawn next note in advance so that it gets to the button on time
-            if (nextIndex < notes.Count && notes[nextIndex] <= songPosInBeats + beatsShownInAdvance)
+            if (nextLeftIndex < leftNotes.Count && leftNotes[nextLeftIndex] <= songPosInBeats + beatsShownInAdvance)
             {
-                colorIndex = Random.Range(0, 2);
-
-                GameObject newNote = Instantiate(colors[colorIndex], noteHolder.transform);
+                GameObject newNote = Instantiate(leftNotePrefab, noteHolder.transform);
                 newNote.transform.position = new Vector3(noteSpawnPosX, 0f, 0f);
 
                 Note note = newNote.GetComponent<Note>();
-                note.beatOfThisNote = notes[nextIndex];
+                note.beatOfThisNote = leftNotes[nextLeftIndex];
 
-                nextIndex++;
+                nextLeftIndex++;
+            }
+
+            if (nextRightIndex < rightNotes.Count && rightNotes[nextRightIndex] <= songPosInBeats + beatsShownInAdvance)
+            {
+                GameObject newNote = Instantiate(rightNotePrefab, noteHolder.transform);
+                newNote.transform.position = new Vector3(noteSpawnPosX, 0f, 0f);
+
+                Note note = newNote.GetComponent<Note>();
+                note.beatOfThisNote = rightNotes[nextRightIndex];
+
+                nextRightIndex++;
             }
 
             // start new smashnote
@@ -142,6 +156,15 @@ public class BeatManager : MonoBehaviour
                 smashNote.hitsNeeded = smashHitsNeeded;
 
                 nextSmashIndex++;
+            }
+
+            // start new timed feedback
+            if (nextFeedbackIndex < timedFeedbacks.Count && timedFeedbacks[nextFeedbackIndex] <= songPosInBeats + beatsShownInAdvance)
+            {
+                feedbackText.color = new Color32(0, 255, 0, 255);
+                feedbackText.text = timedFeedbackTexts[nextFeedbackIndex];
+
+                nextFeedbackIndex++;
             }
 
             // interpolates song progress bar position based on current song position
@@ -159,7 +182,7 @@ public class BeatManager : MonoBehaviour
 
     IEnumerator StartMusic()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         // record the time when the music starts
         songStartTime = (float)AudioSettings.dspTime;
@@ -274,62 +297,13 @@ public class BeatManager : MonoBehaviour
     public void SmashFeedback()
     {
         pointsText.text = "" + points.ToString();
-        feedbackText.color = new Color32(253, 215, 148, 255);
+        feedbackText.color = new Color32(0, 255, 0, 255);
         feedbackText.text = "SMASH";
     }
 
     public void HideFeedback()
     {
         feedbackText.text = "";
-    }
-
-    public void CreateNotes()
-    {
-        float beat = beatsShownInAdvance + offsetInBeats;
-
-        for (int i = 0; i < 11; i++)
-        {
-            int noteOrNot = Random.Range(0, 4);
-
-            if (noteOrNot != 0)
-            {
-                notes.Add(beat);
-            }
-            
-            beat++;
-        }
-
-        beat++;
-        smashNotes.Add(beat);
-        beat = beat + 9;
-
-        for (int i = 0; i < 14; i++)
-        {
-            int noteOrNot = Random.Range(0, 4);
-
-            if (noteOrNot != 0)
-            {
-                notes.Add(beat);
-            }
-
-            beat++;
-        }
-
-        beat++;
-        smashNotes.Add(beat);
-        beat = beat + 9;
-
-        for (int i = 0; i < 14; i++)
-        {
-            int noteOrNot = Random.Range(0, 4);
-
-            if (noteOrNot != 0)
-            {
-                notes.Add(beat);
-            }
-
-            beat++;
-        }
     }
 
     public void TakeDamage(float damage)
@@ -373,5 +347,185 @@ public class BeatManager : MonoBehaviour
         {
             SceneManager.LoadScene("XTESTEnd");
         }
+    }
+
+    public void CreateNotes()
+    {
+        beat = beatsShownInAdvance + offsetInBeats;
+
+        // NOTES
+
+        // no notes in the beginning
+        beat += 11;
+
+        // 4 slow notes
+        for (int i = 0; i < 2; i++)
+        {
+            leftNotes.Add(beat);
+            beat += 4;
+            rightNotes.Add(beat);
+            beat += 4;
+        }
+
+        // basic melody
+        for (int i = 0; i < 2; i++)
+        {
+            BasicMelody();
+        }
+
+        // simple part 1
+        for (int i = 0; i < 4; i++)
+        {
+            rightNotes.Add(beat);
+            beat++;
+            leftNotes.Add(beat);
+            beat++;
+            rightNotes.Add(beat);
+            beat += 2;
+        }
+
+        // simple part 2
+        for (int i = 0; i < 4; i++)
+        {
+            leftNotes.Add(beat);
+            beat++;
+            rightNotes.Add(beat);
+            beat++;
+            leftNotes.Add(beat);
+            beat += 2;
+        }
+
+        // strong notes
+        for (int i = 0; i < 4; i++)
+        {
+            rightNotes.Add(beat);
+            beat++;
+        }
+        beat = beat + 4;
+        for (int i = 0; i < 4; i++)
+        {
+            leftNotes.Add(beat);
+            beat++;
+        }
+        beat = beat + 4;
+
+        // simple part 3
+        for (int i = 0; i < 4; i++)
+        {
+            rightNotes.Add(beat);
+            beat++;
+            leftNotes.Add(beat);
+            beat++;
+            rightNotes.Add(beat);
+            beat += 2;
+        }
+
+        // smash notes
+        beat += 8;
+        timedFeedbacks.Add(beat);
+        timedFeedbackTexts.Add("GET READY");
+        beat += 6;
+        timedFeedbacks.Add(beat);
+        timedFeedbackTexts.Add("TO HIT FAST");
+        beat += 2;
+        smashNotes.Add(beat);
+        beat += 24;
+        timedFeedbacks.Add(beat);
+        timedFeedbackTexts.Add("GET READY");
+        beat += 6;
+        timedFeedbacks.Add(beat);
+        timedFeedbackTexts.Add("TO HIT FAST");
+        beat += 2;
+        smashNotes.Add(beat);
+        beat += 16;
+
+        // basic melody
+        for (int i = 0; i < 2; i++)
+        {
+            BasicMelody();
+        }
+
+        // simple part 1
+        for (int i = 0; i < 8; i++)
+        {
+            rightNotes.Add(beat);
+            beat++;
+            leftNotes.Add(beat);
+            beat++;
+            rightNotes.Add(beat);
+            beat += 2;
+        }
+
+        // strong notes
+        for (int i = 0; i < 4; i++)
+        {
+            rightNotes.Add(beat);
+            beat++;
+        }
+        beat = beat + 4;
+        for (int i = 0; i < 4; i++)
+        {
+            leftNotes.Add(beat);
+            beat++;
+        }
+        beat = beat + 4;
+
+        // simple part 2
+        for (int i = 0; i < 4; i++)
+        {
+            rightNotes.Add(beat);
+            beat++;
+            leftNotes.Add(beat);
+            beat++;
+            rightNotes.Add(beat);
+            beat += 2;
+        }
+    }
+
+    void BasicMelody()
+    {
+        beat += 2;
+        rightNotes.Add(beat);
+        beat++;
+        rightNotes.Add(beat);
+        beat++;
+        leftNotes.Add(beat);
+        beat++;
+        rightNotes.Add(beat);
+        beat += 2;
+        leftNotes.Add(beat);
+        beat++;
+        rightNotes.Add(beat);
+        beat += 4;
+        leftNotes.Add(beat);
+        beat++;
+        rightNotes.Add(beat);
+        beat++;
+        leftNotes.Add(beat);
+        beat++;
+        rightNotes.Add(beat);
+        beat += 2;
+        leftNotes.Add(beat);
+        beat++;
+        leftNotes.Add(beat);
+        beat++;
+        rightNotes.Add(beat);
+        beat++;
+        rightNotes.Add(beat);
+        beat += 4;
+        leftNotes.Add(beat);
+        beat++;
+        rightNotes.Add(beat);
+        beat++;
+        leftNotes.Add(beat);
+        beat++;
+        rightNotes.Add(beat);
+        beat++;
+        rightNotes.Add(beat);
+        beat++;
+        leftNotes.Add(beat);
+        beat++;
+        leftNotes.Add(beat);
+        beat += 2;
     }
 }

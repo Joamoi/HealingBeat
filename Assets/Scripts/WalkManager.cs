@@ -42,6 +42,7 @@ public class WalkManager : MonoBehaviour
     private float lineInterval = 1f;
     [HideInInspector]
     public bool battleOn = false;
+    private bool canHit = false;
     public SpriteRenderer lineBar;
     public Animator symbolAnimator;
     public ParticleSystem healParticle;
@@ -100,7 +101,7 @@ public class WalkManager : MonoBehaviour
     private float[] bunnyValues = new float[2];
     private float bunnyValue = 0f;
     private GameObject npcObject;
-    private bool canHit = false;
+    
 
     // create list of all npcs in the world and store them in progress manager
     private void Awake()
@@ -206,32 +207,12 @@ public class WalkManager : MonoBehaviour
             MusicFadeBoss(distance);
         }
 
-        // MOVE
-
         // movement in this script is based on movepoint towards which the player will move
         // move player towards movepoint every frame
         transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
 
         float moveHori = Input.GetAxisRaw("Horizontal");
         float moveVert = Input.GetAxisRaw("Vertical");
-
-        // check hori and vert movement separately to disable diagonal movement
-        if (Mathf.Abs(moveHori) == 1f && canMove && !playerStopped)
-        {
-            Vector3 targetPos = transform.position + new Vector3(moveHori, 0f, 0f);
-            TryToMove(targetPos);
-        }
-        else if (Mathf.Abs(moveVert) == 1f && canMove && !playerStopped)
-        {
-            Vector3 targetPos = transform.position + new Vector3(0f, 0f, moveVert);
-            TryToMove(targetPos);
-        }
-
-        // re-enable movement after releasing movement buttons
-        if(moveHori == 0f && moveVert == 0f && !battleOn)
-        {
-            canMove = true;
-        }
 
         // NPC BATTLE
 
@@ -247,6 +228,26 @@ public class WalkManager : MonoBehaviour
         if (moveHori == 0f && moveVert == 0f && battleOn)
         {
             canHit = true;
+        }
+
+        // MOVE
+
+        // check hori and vert movement separately to disable diagonal movement
+        if (Mathf.Abs(moveHori) == 1f && canMove && !playerStopped)
+        {
+            Vector3 targetPos = transform.position + new Vector3(moveHori, 0f, 0f);
+            TryToMove(targetPos);
+        }
+        else if (Mathf.Abs(moveVert) == 1f && canMove && !playerStopped)
+        {
+            Vector3 targetPos = transform.position + new Vector3(0f, 0f, moveVert);
+            TryToMove(targetPos);
+        }
+
+        // re-enable movement after releasing movement buttons
+        if (moveHori == 0f && moveVert == 0f && !battleOn)
+        {
+            canMove = true;
         }
     }
 
@@ -412,7 +413,7 @@ public class WalkManager : MonoBehaviour
         int randomBunny = Random.Range(0, 2);
 
         bunnies[randomBunny].enabled = true;
-        idleBunnies[randomBunny].enabled = true;
+        //idleBunnies[randomBunny].enabled = true;
         bunnyValue = bunnyValues[randomBunny];
     }
 
@@ -572,5 +573,11 @@ public class WalkManager : MonoBehaviour
     public void HealSound()
     {
         healSound.Play();
+    }
+
+    public void OK()
+    {
+        startTutorial.SetActive(false);
+        WalkManager.walkInstance.playerStopped = false;
     }
 }
