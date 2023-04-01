@@ -16,6 +16,10 @@ public class ProgressManager : MonoBehaviour
     public bool resetNPCs = true;
     [HideInInspector]
     public string previousScene;
+    [HideInInspector]
+    public int npcsAmount;
+    [HideInInspector]
+    public int npcsLeft;
 
     // this object isn't destroyed between scenes
     void Awake()
@@ -31,10 +35,14 @@ public class ProgressManager : MonoBehaviour
         if (resetNPCs)
         {
             npcStates.Clear();
+            npcsAmount = 0;
+            npcsLeft = 0;
 
             foreach (Transform npcTransform in npcHolder.transform)
             {
                 npcStates.Add(1);
+                npcsAmount++;
+                npcsLeft++;
             }
 
             resetNPCs = false;

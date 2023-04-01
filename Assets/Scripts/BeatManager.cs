@@ -182,7 +182,7 @@ public class BeatManager : MonoBehaviour
 
     IEnumerator StartMusic()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
 
         // record the time when the music starts
         songStartTime = (float)AudioSettings.dspTime;

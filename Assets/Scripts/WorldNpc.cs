@@ -62,6 +62,7 @@ public class WorldNpc : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("Obstacles");
 
         ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+        progressManager.npcsLeft--;
         List<GameObject> npcs = progressManager.npcs;
         List<int> npcStates = progressManager.npcStates;
 

@@ -29,6 +29,7 @@ public class WalkManager : MonoBehaviour
     public bool gameIsPaused = false;
 
     public AudioSource music;
+    public AudioSource music2;
     public AudioSource healSound;
     public AudioSource jumpSound;
     public AudioSource damageSound;
@@ -47,7 +48,6 @@ public class WalkManager : MonoBehaviour
     public Animator symbolAnimator;
     public ParticleSystem healParticle;
     public ParticleSystem jumpParticle;
-    public Shader discoFloor;
 
     public Transform playerModel;
     public Animator animator;
@@ -101,7 +101,12 @@ public class WalkManager : MonoBehaviour
     private float[] bunnyValues = new float[2];
     private float bunnyValue = 0f;
     private GameObject npcObject;
-    
+    public GameObject leftBunnyText;
+    public GameObject rightBunnyText;
+    private GameObject[] bunnyTexts = new GameObject[2];
+    public GameObject moveText;
+    private int rhythmSteps = 0;
+    private bool rhythmStepsDone = false;
 
     // create list of all npcs in the world and store them in progress manager
     private void Awake()
@@ -122,6 +127,12 @@ public class WalkManager : MonoBehaviour
             startTutorial.SetActive(true);
             Cursor.visible = true;
             playerStopped = true;
+            moveText.SetActive(false);
+        }
+
+        else
+        {
+            moveText.SetActive(true);
         }
 
         progressManager.previousScene = "WorldScene";
@@ -144,6 +155,7 @@ public class WalkManager : MonoBehaviour
         bunnies[0] = leftBunny; bunnies[1] = rightBunny;
         idleBunnies[0] = rightBunnyIdle; idleBunnies[1] = leftBunnyIdle;
         bunnyValues[0] = -1; bunnyValues[1] = 1;
+        bunnyTexts[0] = leftBunnyText; bunnyTexts[1] = rightBunnyText;
         walkTimeCounter = 0;
         walkTimeCheck1 = -99f;
         walkTimeCheck2 = -49f;
@@ -214,22 +226,6 @@ public class WalkManager : MonoBehaviour
         float moveHori = Input.GetAxisRaw("Horizontal");
         float moveVert = Input.GetAxisRaw("Vertical");
 
-        // NPC BATTLE
-
-        if (battleOn && canHit)
-        {
-            if (moveHori != 0)
-            {
-                CheckBattleHit(moveHori);
-            }
-        }
-
-        // re-enable movement after releasing movement buttons
-        if (moveHori == 0f && moveVert == 0f && battleOn)
-        {
-            canHit = true;
-        }
-
         // MOVE
 
         // check hori and vert movement separately to disable diagonal movement
@@ -249,6 +245,33 @@ public class WalkManager : MonoBehaviour
         {
             canMove = true;
         }
+
+        // NPC BATTLE
+
+        if (battleOn && canHit)
+        {
+            if (moveHori != 0)
+            {
+                CheckBattleHit(moveHori);
+            }
+        }
+
+        // re-enable battle hits after releasing movement buttons
+        if (moveHori == 0f && moveVert == 0f && battleOn)
+        {
+            canHit = true;
+        }
+    }
+
+    IEnumerator StartMusic()
+    {
+        yield return new WaitForSeconds(1f);
+
+        // record the time when the music starts
+        songStartTime = (float)AudioSettings.dspTime;
+        music.Play();
+        music2.Play();
+        musicPlaying = true;
     }
 
     public void TryToMove(Vector3 targetPos)
@@ -312,6 +335,8 @@ public class WalkManager : MonoBehaviour
                     walkCombo++;
                     jumpSound.Play();
                     jumpParticle.Play();
+                    //music2.volume = 0f;
+                    //music.volume = originalMusicVol;
                     StartCoroutine("PPIntensify");
 
                     for (int i = 0; i < lights.Count; i++)
@@ -321,7 +346,7 @@ public class WalkManager : MonoBehaviour
 
                     // only move if there are no obstacles or enemies
                     // move 2 tiles with combo, 1 otherwise
-                    if (walkCombo > 4)
+                    if (walkCombo > 0)
                     {
                         targetPos = transform.position + 2 * (targetPos - transform.position);
 
@@ -330,12 +355,21 @@ public class WalkManager : MonoBehaviour
                             movePoint.position = targetPos;
                         }
                     }
+
+                    rhythmSteps++;
+                    if (rhythmSteps > 2 && !rhythmStepsDone)
+                    {
+                        moveText.SetActive(false);
+                        rhythmStepsDone = true;
+                    }
                 }
 
                 // moving combo fails if player isn't on beat
                 else
                 {
                     walkCombo = 0;
+                    //music.volume = 0f;
+                    //music2.volume = originalMusicVol;
                 }
 
                 animator.SetTrigger("Move");
@@ -345,26 +379,19 @@ public class WalkManager : MonoBehaviour
             {
                 Collider[] enemy = Physics.OverlapSphere(targetPos, .2f, enemies);
 
-                // start npc battle if there is an enemy
+                // start npc battle if there is an enemy, start boss battle if it's a boss
                 if (enemy.Length > 0)
                 {
                     npcObject = enemy[0].transform.gameObject;
 
                     if (npcObject.tag == "Boss")
                     {
-                        StartCoroutine("Boss");
+                        StartCoroutine("StartBoss");
                     }
 
                     else
                     {
-                        WorldNpc npc = npcObject.GetComponent<WorldNpc>();
-                        npc.hpObject.SetActive(true);
-
-                        battleOn = true;
-                        canMove = false;
-                        StartCoroutine("StartBattlePP");
-
-                        RandomBunny();
+                        StartCoroutine("StartBattle");
                     }
                 }
             }
@@ -409,11 +436,21 @@ public class WalkManager : MonoBehaviour
     {
         leftBunny.enabled = false;
         rightBunny.enabled = false;
+        leftBunnyIdle.enabled = false;
+        rightBunnyIdle.enabled = false;
+        leftBunnyText.SetActive(false);
+        rightBunnyText.SetActive(false);
 
         int randomBunny = Random.Range(0, 2);
 
         bunnies[randomBunny].enabled = true;
         //idleBunnies[randomBunny].enabled = true;
+        ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+        if (progressManager.npcsAmount == progressManager.npcsLeft)
+        {
+            bunnyTexts[randomBunny].SetActive(true);
+        }
+
         bunnyValue = bunnyValues[randomBunny];
     }
 
@@ -432,44 +469,31 @@ public class WalkManager : MonoBehaviour
         hpMask.transform.position = new Vector3(newPosX, hpMask.transform.position.y, hpMask.transform.position.z);
     }
 
-    public void BattleOver()
+    IEnumerator StartBattle()
     {
-        leftBunny.enabled = false;
-        rightBunny.enabled = false;
-        leftBunnyIdle.enabled = false;
-        rightBunnyIdle.enabled = false;
-        battleOn = false;
-        hp = 100f;
-        StartCoroutine("EndBattlePP");
+        playerStopped = true;
+
+        volume.profile.TryGet<ChromaticAberration>(out chroAb);
+        volume.profile.TryGet<ColorAdjustments>(out colorAdj);
+        volume.profile.TryGet<Vignette>(out vignette);
+
+        chroAb.intensity.value += 0.5f * chroAbIntensity;
+        colorAdj.postExposure.value -= 0.5f * postExposure;
+        vignette.intensity.value += 0.5f * vignetteIntensity;
+
+        yield return new WaitForSeconds(0.1f);
+
+        chroAb.intensity.value += 0.5f * chroAbIntensity;
+        colorAdj.postExposure.value -= 0.5f * postExposure;
+        vignette.intensity.value += 0.5f * vignetteIntensity;
+
+        battleOn = true;
+        WorldNpc npc = npcObject.GetComponent<WorldNpc>();
+        npc.hpObject.SetActive(true);
+        RandomBunny();
     }
 
-    public void Respawn()
-    {
-        ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
-        progressManager.resetNPCs = true;
-
-        if (SceneManager.GetActiveScene().name == "WorldScene")
-        {
-            SceneManager.LoadScene("WorldScene");
-        }
-
-        else
-        {
-            SceneManager.LoadScene("XTESTWorld");
-        }
-    }
-
-    IEnumerator StartMusic()
-    {
-        yield return new WaitForSeconds(1f);
-
-        // record the time when the music starts
-        songStartTime = (float)AudioSettings.dspTime;
-        music.Play();
-        musicPlaying = true;
-    }
-
-    IEnumerator Boss()
+    IEnumerator StartBoss()
     {
         playerStopped = true;
         bossTransition.Play();
@@ -491,6 +515,56 @@ public class WalkManager : MonoBehaviour
         }
     }
 
+    public void BattleOver()
+    {
+        battleOn = false;
+        hp = 100f;
+
+        leftBunny.enabled = false;
+        rightBunny.enabled = false;
+        leftBunnyIdle.enabled = false;
+        rightBunnyIdle.enabled = false;
+        leftBunnyText.SetActive(false);
+        rightBunnyText.SetActive(false);
+
+        StartCoroutine("EndBattle");
+    }
+
+    IEnumerator EndBattle()
+    {
+        volume.profile.TryGet<ChromaticAberration>(out chroAb);
+        volume.profile.TryGet<ColorAdjustments>(out colorAdj);
+        volume.profile.TryGet<Vignette>(out vignette);
+
+        chroAb.intensity.value -= 0.5f * chroAbIntensity;
+        colorAdj.postExposure.value += 0.5f * postExposure;
+        vignette.intensity.value -= 0.5f * vignetteIntensity;
+
+        yield return new WaitForSeconds(0.1f);
+
+        chroAb.intensity.value -= 0.5f * chroAbIntensity;
+        colorAdj.postExposure.value += 0.5f * postExposure;
+        vignette.intensity.value -= 0.5f * vignetteIntensity;
+
+        playerStopped = false;
+    }
+
+    public void Respawn()
+    {
+        ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+        progressManager.resetNPCs = true;
+
+        if (SceneManager.GetActiveScene().name == "WorldScene")
+        {
+            SceneManager.LoadScene("WorldScene");
+        }
+
+        else
+        {
+            SceneManager.LoadScene("XTESTWorld");
+        }
+    }
+
     public void MusicFadeBoss(float distance)
     {
         float volMultiplier = distance / musicFadeBossDist;
@@ -500,28 +574,28 @@ public class WalkManager : MonoBehaviour
     IEnumerator PPIntensify()
     {
         volume.profile.TryGet<Bloom>(out bloom);
-        volume.profile.TryGet<ColorAdjustments>(out colorAdj);
+        //volume.profile.TryGet<ColorAdjustments>(out colorAdj);
 
         //float originalBloomThresh = bloom.threshold.value;
         //float originalPostExpo = colorAdj.postExposure.value;
 
         bloom.threshold.value -= 0.5f * bloomThreshold;
-        colorAdj.postExposure.value += 0.5f * postExposure;
+        //colorAdj.postExposure.value += 0.5f * postExposure;
 
         yield return new WaitForSeconds(lightDuration / 3f);
 
         bloom.threshold.value -= 0.5f * bloomThreshold;
-        colorAdj.postExposure.value += 0.5f * postExposure;
+        //colorAdj.postExposure.value += 0.5f * postExposure;
 
         yield return new WaitForSeconds(lightDuration / 3f);
 
         bloom.threshold.value += 0.5f * bloomThreshold;
-        colorAdj.postExposure.value -= 0.5f * postExposure;
+        //colorAdj.postExposure.value -= 0.5f * postExposure;
 
         yield return new WaitForSeconds(lightDuration / 3f);
 
         bloom.threshold.value += 0.5f * bloomThreshold;
-        colorAdj.postExposure.value -= 0.5f * postExposure;
+        //colorAdj.postExposure.value -= 0.5f * postExposure;
     }
 
     IEnumerator LightIntensify(Light light)
@@ -537,39 +611,6 @@ public class WalkManager : MonoBehaviour
         light.intensity -= 0.5f * lightMultiplier * originalIntensity;
     }
 
-    IEnumerator StartBattlePP()
-    {
-        volume.profile.TryGet<ChromaticAberration>(out chroAb);
-        volume.profile.TryGet<ColorAdjustments>(out colorAdj);
-        volume.profile.TryGet<Vignette>(out vignette);
-
-        chroAb.intensity.value += 0.5f * bloomThreshold;
-        colorAdj.postExposure.value -= 0.5f * postExposure;
-        vignette.intensity.value += 0.5f * vignetteIntensity;
-
-        yield return new WaitForSeconds(0.1f);
-
-        chroAb.intensity.value += 0.5f * bloomThreshold;
-        colorAdj.postExposure.value -= 0.5f * postExposure;
-        vignette.intensity.value += 0.5f * vignetteIntensity;
-    }
-
-    IEnumerator EndBattlePP()
-    {
-        volume.profile.TryGet<ChromaticAberration>(out chroAb);
-        volume.profile.TryGet<ColorAdjustments>(out colorAdj);
-
-        chroAb.intensity.value -= 0.5f * bloomThreshold;
-        colorAdj.postExposure.value += 0.5f * postExposure;
-        vignette.intensity.value -= 0.5f * vignetteIntensity;
-
-        yield return new WaitForSeconds(0.1f);
-
-        chroAb.intensity.value -= 0.5f * bloomThreshold;
-        colorAdj.postExposure.value += 0.5f * postExposure;
-        vignette.intensity.value -= 0.5f * vignetteIntensity;
-    }
-
     public void HealSound()
     {
         healSound.Play();
@@ -579,5 +620,6 @@ public class WalkManager : MonoBehaviour
     {
         startTutorial.SetActive(false);
         WalkManager.walkInstance.playerStopped = false;
+        moveText.SetActive(true);
     }
 }
