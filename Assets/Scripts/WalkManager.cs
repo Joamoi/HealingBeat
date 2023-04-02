@@ -30,6 +30,7 @@ public class WalkManager : MonoBehaviour
 
     public AudioSource music;
     public AudioSource music2;
+    public AudioSource deathMusic;
     public AudioSource healSound;
     public AudioSource jumpSound;
     public AudioSource damageSound;
@@ -69,6 +70,11 @@ public class WalkManager : MonoBehaviour
     public ParticleSystem bossTransition;
     public GameObject bossTransitionBackground;
     public Transform boss;
+    public GameObject fadeImage;
+    public Animator fadeAnimator;
+    public GameObject deathScreen;
+    public GameObject deathText;
+    public Animator deathTextAnimator;
 
     public GameObject hpMask;
     private float hp0PosX;
@@ -146,6 +152,7 @@ public class WalkManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        fadeImage.SetActive(true);
         secPerBeat = 60f / songBpm;
         previousBeat = -1;
         hp100PosX = hpMask.transform.position.x;
@@ -462,7 +469,7 @@ public class WalkManager : MonoBehaviour
         if (hp <= 0)
         {
             hp = 0;
-            Respawn();
+            StartCoroutine("Death");
         }
 
         float newPosX = Mathf.Lerp(hp100PosX, hp0PosX, (hpMax - hp) / hpMax);
@@ -549,8 +556,22 @@ public class WalkManager : MonoBehaviour
         playerStopped = false;
     }
 
-    public void Respawn()
+    IEnumerator Death()
     {
+        fadeAnimator.SetTrigger("FadeOut");
+        yield return new WaitForSeconds(1f);
+        deathScreen.SetActive(true);
+        fadeAnimator.SetTrigger("FadeIn");
+        music.Stop();
+        deathMusic.Play();
+        yield return new WaitForSeconds(1f);
+        deathText.SetActive(true);
+        deathTextAnimator.SetTrigger("ShowText");
+        yield return new WaitForSeconds(5f);
+        deathText.SetActive(false);
+        fadeAnimator.SetTrigger("FadeOut");
+        yield return new WaitForSeconds(1f);
+
         ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
         progressManager.resetNPCs = true;
 

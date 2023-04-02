@@ -20,6 +20,7 @@ public class BeatManager : MonoBehaviour
     public AudioSource music;
     public AudioSource damageSound;
     public GameObject fadeImage;
+    public Animator fadeAnimator;
 
     public float beatsShownInAdvance;
     private List<float> leftNotes = new List<float>();
@@ -336,7 +337,9 @@ public class BeatManager : MonoBehaviour
 
     IEnumerator EndScreen()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
+        fadeAnimator.SetTrigger("FadeOut");
+        yield return new WaitForSeconds(1.5f);
 
         if (SceneManager.GetActiveScene().name == "BattleScene")
         {
