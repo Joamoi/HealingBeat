@@ -18,9 +18,13 @@ public class BeatManager : MonoBehaviour
     private float beat;
 
     public AudioSource music;
+    public AudioSource deathMusic;
     public AudioSource damageSound;
     public GameObject fadeImage;
     public Animator fadeAnimator;
+    public GameObject deathScreen;
+    public GameObject deathText;
+    public Animator deathTextAnimator;
 
     public float beatsShownInAdvance;
     private List<float> leftNotes = new List<float>();
@@ -99,7 +103,7 @@ public class BeatManager : MonoBehaviour
         secPerBeat = 60f / songBpm;
         combo = 0;
         hp100PosX = hpMask.transform.position.x;
-        hp0PosX = hp100PosX - 1.15f;
+        hp0PosX = hp100PosX - 1.25f;
         hpMax = hp;
         progressBarStartPos = progressBar.transform.position;
         progressBarEndPos = new Vector3(0f, -4.86f, 0f);
@@ -299,7 +303,7 @@ public class BeatManager : MonoBehaviour
     {
         pointsText.text = "" + points.ToString();
         feedbackText.color = new Color32(0, 255, 0, 255);
-        feedbackText.text = "SMASH";
+        feedbackText.text = "";
     }
 
     public void HideFeedback()
@@ -315,15 +319,30 @@ public class BeatManager : MonoBehaviour
         if(hp <= 0)
         {
             hp = 0;
-            Respawn();
+            StartCoroutine("Death");
         }
 
         float newPosX = Mathf.Lerp(hp100PosX, hp0PosX, (hpMax - hp) / hpMax);
         hpMask.transform.position = new Vector3(newPosX, hpMask.transform.position.y, hpMask.transform.position.z);
     }
 
-    public void Respawn()
+    IEnumerator Death()
     {
+        gameIsPaused = true;
+        fadeAnimator.SetTrigger("FadeOut");
+        yield return new WaitForSeconds(1f);
+        deathScreen.SetActive(true);
+        fadeAnimator.SetTrigger("FadeIn");
+        music.Stop();
+        deathMusic.Play();
+        yield return new WaitForSeconds(1f);
+        deathText.SetActive(true);
+        deathTextAnimator.SetTrigger("ShowText");
+        yield return new WaitForSeconds(4f);
+        deathText.SetActive(false);
+        fadeAnimator.SetTrigger("FadeOut");
+        yield return new WaitForSeconds(1f);
+
         if (SceneManager.GetActiveScene().name == "BattleScene")
         {
             SceneManager.LoadScene("WorldScene");
@@ -427,20 +446,20 @@ public class BeatManager : MonoBehaviour
         beat += 8;
         timedFeedbacks.Add(beat);
         timedFeedbackTexts.Add("GET READY");
-        beat += 6;
+        beat += 8;
         timedFeedbacks.Add(beat);
-        timedFeedbackTexts.Add("TO HIT FAST");
-        beat += 2;
-        smashNotes.Add(beat);
-        beat += 24;
-        timedFeedbacks.Add(beat);
-        timedFeedbackTexts.Add("GET READY");
-        beat += 6;
-        timedFeedbacks.Add(beat);
-        timedFeedbackTexts.Add("TO HIT FAST");
-        beat += 2;
+        timedFeedbackTexts.Add("TO HIT LEFT / RIGHT FAST");
+        beat += 8;
         smashNotes.Add(beat);
         beat += 16;
+        timedFeedbacks.Add(beat);
+        timedFeedbackTexts.Add("GET READY");
+        beat += 10;
+        timedFeedbacks.Add(beat);
+        timedFeedbackTexts.Add("TO HIT LEFT / RIGHT FAST");
+        beat += 6;
+        smashNotes.Add(beat);
+        beat += 8;
 
         // basic melody
         for (int i = 0; i < 2; i++)
@@ -480,6 +499,15 @@ public class BeatManager : MonoBehaviour
             beat++;
             leftNotes.Add(beat);
             beat++;
+            rightNotes.Add(beat);
+            beat += 2;
+        }
+
+        // end
+        for (int i = 0; i < 2; i++)
+        {
+            leftNotes.Add(beat);
+            beat += 2;
             rightNotes.Add(beat);
             beat += 2;
         }

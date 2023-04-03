@@ -21,6 +21,7 @@ public class WalkManager : MonoBehaviour
     private float songPosRounded = 0f;
 
     public float beatDiffFix;
+    public float walkDiffFix;
     public float rhythmThreshold;
     private float previousBeat;
     [HideInInspector]
@@ -75,6 +76,7 @@ public class WalkManager : MonoBehaviour
     public GameObject deathScreen;
     public GameObject deathText;
     public Animator deathTextAnimator;
+    public GameObject bossWall;
 
     public GameObject hpMask;
     private float hp0PosX;
@@ -133,12 +135,6 @@ public class WalkManager : MonoBehaviour
             startTutorial.SetActive(true);
             Cursor.visible = true;
             playerStopped = true;
-            moveText.SetActive(false);
-        }
-
-        else
-        {
-            moveText.SetActive(true);
         }
 
         progressManager.previousScene = "WorldScene";
@@ -146,6 +142,12 @@ public class WalkManager : MonoBehaviour
         if (progressManager.bossReached)
         {
             transform.position = bossRespawnPos.position;
+            bossWall.SetActive(false);
+        }
+
+        else
+        {
+            moveText.SetActive(true);
         }
     }
 
@@ -156,7 +158,7 @@ public class WalkManager : MonoBehaviour
         secPerBeat = 60f / songBpm;
         previousBeat = -1;
         hp100PosX = hpMask.transform.position.x;
-        hp0PosX = hp100PosX - 1.15f;
+        hp0PosX = hp100PosX - 1.25f;
         hpMax = hp;
         originalMusicVol = music.volume;
         bunnies[0] = leftBunny; bunnies[1] = rightBunny;
@@ -233,6 +235,22 @@ public class WalkManager : MonoBehaviour
         float moveHori = Input.GetAxisRaw("Horizontal");
         float moveVert = Input.GetAxisRaw("Vertical");
 
+        // NPC BATTLE
+
+        if (battleOn && canHit)
+        {
+            if (moveHori != 0)
+            {
+                CheckBattleHit(moveHori);
+            }
+        }
+
+        // re-enable battle hits after releasing movement buttons
+        if (moveHori == 0f && moveVert == 0f && battleOn)
+        {
+            canHit = true;
+        }
+
         // MOVE
 
         // check hori and vert movement separately to disable diagonal movement
@@ -251,22 +269,6 @@ public class WalkManager : MonoBehaviour
         if (moveHori == 0f && moveVert == 0f && !battleOn)
         {
             canMove = true;
-        }
-
-        // NPC BATTLE
-
-        if (battleOn && canHit)
-        {
-            if (moveHori != 0)
-            {
-                CheckBattleHit(moveHori);
-            }
-        }
-
-        // re-enable battle hits after releasing movement buttons
-        if (moveHori == 0f && moveVert == 0f && battleOn)
-        {
-            canHit = true;
         }
     }
 
@@ -327,7 +329,7 @@ public class WalkManager : MonoBehaviour
                 movePoint.position = targetPos;
 
                 float oldSongPosRounded = songPosRounded;
-                songPosRounded = Mathf.Round(songPosInBeats - beatDiffFix);
+                songPosRounded = Mathf.Round(songPosInBeats - walkDiffFix);
 
                 // moving combo fails if player doesn't move every beat
                 if (songPosRounded - oldSongPosRounded > (1 + 2 * rhythmThreshold))
@@ -336,7 +338,7 @@ public class WalkManager : MonoBehaviour
                 }
 
                 // if songposinbeats is near whole number, player is on rhythm, if near half, player is not on rhythm
-                float inaccuracy = Mathf.Abs((songPosInBeats - beatDiffFix) - songPosRounded);
+                float inaccuracy = Mathf.Abs((songPosInBeats - walkDiffFix) - songPosRounded);
                 if (inaccuracy < rhythmThreshold)
                 {
                     walkCombo++;
@@ -355,9 +357,12 @@ public class WalkManager : MonoBehaviour
                     // move 2 tiles with combo, 1 otherwise
                     if (walkCombo > 0)
                     {
-                        targetPos = transform.position + 2 * (targetPos - transform.position);
+                        Vector3 moveDir = targetPos - transform.position;
+                        Vector3 cornerPos1 = targetPos + Vector3.Cross(moveDir, Vector3.up);
+                        Vector3 cornerPos2 = targetPos - Vector3.Cross(moveDir, Vector3.up);
+                        targetPos = transform.position + 2 * moveDir;
 
-                        if (Physics.OverlapSphere(targetPos, .2f, obstacles).Length == 0 && Physics.OverlapSphere(targetPos, .2f, enemies).Length == 0)
+                        if (Physics.OverlapSphere(targetPos, .2f, obstacles).Length == 0 && Physics.OverlapSphere(targetPos, .2f, enemies).Length == 0 && Physics.OverlapSphere(cornerPos1, .2f, enemies).Length == 0 && Physics.OverlapSphere(cornerPos2, .2f, enemies).Length == 0)
                         {
                             movePoint.position = targetPos;
                         }
@@ -408,8 +413,8 @@ public class WalkManager : MonoBehaviour
     public void CheckBattleHit(float moveHori)
     {
         // if songposinbeats is near whole number, player is on rhythm, if near half, player is not on rhythm
-        songPosRounded = Mathf.Round(songPosInBeats - beatDiffFix);
-        float inaccuracy = Mathf.Abs((songPosInBeats - beatDiffFix) - songPosRounded);
+        songPosRounded = Mathf.Round(songPosInBeats - walkDiffFix);
+        float inaccuracy = Mathf.Abs((songPosInBeats - walkDiffFix) - songPosRounded);
 
         WorldNpc npc = npcObject.GetComponent<WorldNpc>();
 
@@ -434,12 +439,13 @@ public class WalkManager : MonoBehaviour
 
         if (npc.hp < 100)
         {
-            RandomBunny();
-            canHit = false;
+            StartCoroutine("RandomBunny");
         }
+
+        canHit = false;
     }
 
-    public void RandomBunny()
+    IEnumerator RandomBunny()
     {
         leftBunny.enabled = false;
         rightBunny.enabled = false;
@@ -449,6 +455,8 @@ public class WalkManager : MonoBehaviour
         rightBunnyText.SetActive(false);
 
         int randomBunny = Random.Range(0, 2);
+
+        yield return new WaitForSeconds(0.1f);
 
         bunnies[randomBunny].enabled = true;
         //idleBunnies[randomBunny].enabled = true;
@@ -497,7 +505,7 @@ public class WalkManager : MonoBehaviour
         battleOn = true;
         WorldNpc npc = npcObject.GetComponent<WorldNpc>();
         npc.hpObject.SetActive(true);
-        RandomBunny();
+        StartCoroutine("RandomBunny");
     }
 
     IEnumerator StartBoss()
@@ -526,6 +534,8 @@ public class WalkManager : MonoBehaviour
     {
         battleOn = false;
         hp = 100f;
+        float newPosX = Mathf.Lerp(hp100PosX, hp0PosX, (hpMax - hp) / hpMax);
+        hpMask.transform.position = new Vector3(newPosX, hpMask.transform.position.y, hpMask.transform.position.z);
 
         leftBunny.enabled = false;
         rightBunny.enabled = false;
@@ -558,6 +568,7 @@ public class WalkManager : MonoBehaviour
 
     IEnumerator Death()
     {
+        gameIsPaused = true;
         fadeAnimator.SetTrigger("FadeOut");
         yield return new WaitForSeconds(1f);
         deathScreen.SetActive(true);
@@ -567,7 +578,7 @@ public class WalkManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         deathText.SetActive(true);
         deathTextAnimator.SetTrigger("ShowText");
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(4f);
         deathText.SetActive(false);
         fadeAnimator.SetTrigger("FadeOut");
         yield return new WaitForSeconds(1f);

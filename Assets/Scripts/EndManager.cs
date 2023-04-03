@@ -8,6 +8,9 @@ public class EndManager : MonoBehaviour
 {
     public GameObject buttons;
     public GameObject progressPrefab;
+    public GameObject fadeImage;
+    public GameObject endText;
+    public Animator textAnimator;
 
     void Start()
     {
@@ -21,6 +24,7 @@ public class EndManager : MonoBehaviour
         ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
         progressManager.previousScene = "EndScene";
 
+        fadeImage.SetActive(true);
         StartCoroutine("ShowButtons");
     }
 
@@ -48,6 +52,9 @@ public class EndManager : MonoBehaviour
 
     IEnumerator ShowButtons()
     {
+        yield return new WaitForSeconds(2f);
+        endText.SetActive(true);
+        textAnimator.SetTrigger("FadeIn");
         yield return new WaitForSeconds(3f);
         Cursor.visible = true;
         buttons.SetActive(true);

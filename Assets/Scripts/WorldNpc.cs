@@ -76,6 +76,11 @@ public class WorldNpc : MonoBehaviour
 
         WalkManager.walkInstance.BattleOver();
         WalkManager.walkInstance.HealSound();
+
+        if (progressManager.npcsLeft == 0)
+        {
+            WalkManager.walkInstance.bossWall.SetActive(false);
+        }
     }
 
     public void Healed()
