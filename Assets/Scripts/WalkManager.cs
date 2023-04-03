@@ -135,6 +135,12 @@ public class WalkManager : MonoBehaviour
             startTutorial.SetActive(true);
             Cursor.visible = true;
             playerStopped = true;
+            moveText.SetActive(false);
+        }
+
+        else
+        {
+            moveText.SetActive(true);
         }
 
         progressManager.previousScene = "WorldScene";
@@ -143,11 +149,7 @@ public class WalkManager : MonoBehaviour
         {
             transform.position = bossRespawnPos.position;
             bossWall.SetActive(false);
-        }
-
-        else
-        {
-            moveText.SetActive(true);
+            moveText.SetActive(false);
         }
     }
 
@@ -342,7 +344,7 @@ public class WalkManager : MonoBehaviour
                 if (inaccuracy < rhythmThreshold)
                 {
                     walkCombo++;
-                    jumpSound.Play();
+                    //jumpSound.Play();
                     jumpParticle.Play();
                     //music2.volume = 0f;
                     //music.volume = originalMusicVol;
@@ -456,7 +458,7 @@ public class WalkManager : MonoBehaviour
 
         int randomBunny = Random.Range(0, 2);
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0f);
 
         bunnies[randomBunny].enabled = true;
         //idleBunnies[randomBunny].enabled = true;
@@ -515,9 +517,9 @@ public class WalkManager : MonoBehaviour
         music.Stop();
         bossTransitionSound.Play();
 
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.8f);
         bossTransitionBackground.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
 
         if (SceneManager.GetActiveScene().name == "WorldScene")
         {

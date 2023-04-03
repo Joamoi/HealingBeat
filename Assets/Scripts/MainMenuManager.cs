@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -18,6 +20,21 @@ public class MainMenuManager : MonoBehaviour
     public Slider musicSlider;
     public Slider effectsSlider;
     //public AudioSource testEffectSound;
+
+    public AudioSource music;
+    public float songBpm;
+    private float secPerBeat;
+    private float songPosInSecs;
+    [HideInInspector]
+    public float songPosInBeats;
+    private float songStartTime;
+    private float previousBeat;
+    [HideInInspector]
+    public bool musicPlaying = false;
+    public Volume volume;
+    private ChromaticAberration chroAb;
+    public float chroAbIntensity;
+    public float lightDuration;
 
     void Start()
     {
@@ -40,6 +57,50 @@ public class MainMenuManager : MonoBehaviour
             audioMixer.SetFloat("effectsVolume", Mathf.Log10(PlayerPrefs.GetFloat("effectsVol")) * 20);
             effectsSlider.value = (PlayerPrefs.GetFloat("effectsVol"));
         }
+
+        secPerBeat = 60f / songBpm;
+        previousBeat = -1;
+        StartCoroutine("StartMusic");
+    }
+
+    void Update()
+    {
+        // beat is based on dsptime which is more accurate
+        songPosInSecs = (float)(AudioSettings.dspTime - songStartTime);
+        songPosInBeats = songPosInSecs / secPerBeat;
+
+        if ((songPosInBeats - previousBeat) >= 1f && musicPlaying)
+        {
+            previousBeat++;
+            Shader.SetGlobalFloat("_FlipBookTile", previousBeat);
+
+            StartCoroutine("PPIntensify");
+        }
+    }
+
+    IEnumerator StartMusic()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        // record the time when the music starts
+        songStartTime = (float)AudioSettings.dspTime;
+        music.Play();
+        musicPlaying = true;
+    }
+
+    IEnumerator PPIntensify()
+    {
+        volume.profile.TryGet<ChromaticAberration>(out chroAb);
+
+        chroAb.intensity.value += chroAbIntensity;
+
+        yield return new WaitForSeconds(lightDuration / 2f);
+
+        chroAb.intensity.value -= 0.5f * chroAbIntensity;
+
+        yield return new WaitForSeconds(lightDuration / 2f);
+
+        chroAb.intensity.value -= 0.5f * chroAbIntensity;
     }
 
     public void PlayGame()

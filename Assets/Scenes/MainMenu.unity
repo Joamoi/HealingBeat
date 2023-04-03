@@ -4231,8 +4231,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -8821507701479769757, guid: 56d67741b81d6494f82bcc3b71d32b66,
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 172e681a50abde7408adb1972e264a8e, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_PlayOnAwake: 0
+  m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -5675,7 +5675,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0b54b7614c79d564d8491e84a0df1bb5, type: 2}
+  - {fileID: 2100000, guid: 4855cfaeb3e0c944db9cdb5273e18c59, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7464,7 +7464,7 @@ MonoBehaviour:
   m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.3
+  m_Value: 0.15
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -11998,6 +11998,13 @@ MonoBehaviour:
   audioMixer: {fileID: 24100000, guid: 56d67741b81d6494f82bcc3b71d32b66, type: 2}
   musicSlider: {fileID: 1930234774}
   effectsSlider: {fileID: 731988028}
+  music: {fileID: 334526494}
+  songBpm: 130
+  songPosInBeats: 0
+  musicPlaying: 0
+  volume: {fileID: 832575518}
+  chroAbIntensity: 0.2
+  lightDuration: 0.2
 --- !u!114 &1248132285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19426,7 +19433,7 @@ MonoBehaviour:
   m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.3
+  m_Value: 0.15
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
