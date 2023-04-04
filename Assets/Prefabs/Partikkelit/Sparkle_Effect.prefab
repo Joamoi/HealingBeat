@@ -42,14 +42,14 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5726062687468514349}
   serializedVersion: 8
-  lengthInSec: 3
+  lengthInSec: 1.5
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
-  looping: 1
+  looping: 0
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -117,7 +117,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 3
+      scalar: 1.5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -286,7 +286,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 3
+      scalar: 0.3
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -4884,26 +4884,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8534574820143275780, guid: b6d5706f82936fa46b113d4e97797025,
-        type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8534574820143275780, guid: b6d5706f82936fa46b113d4e97797025,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.b
-      value: 0.28502133
-      objectReference: {fileID: 0}
-    - target: {fileID: 8534574820143275780, guid: b6d5706f82936fa46b113d4e97797025,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.g
-      value: 0.9352292
-      objectReference: {fileID: 0}
-    - target: {fileID: 8534574820143275780, guid: b6d5706f82936fa46b113d4e97797025,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.r
-      value: 0.990566
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6d5706f82936fa46b113d4e97797025, type: 3}
