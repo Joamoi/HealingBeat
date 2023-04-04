@@ -25,8 +25,6 @@ public class SmashNote : MonoBehaviour
     public float beatOfThisNote;
 
     public GameObject noteEnd;
-    public SpriteRenderer lineSprite;
-    public Sprite completedSprite;
     [HideInInspector]
     public float hitsNeeded;
     private float hitsDone = 0f;
@@ -62,9 +60,10 @@ public class SmashNote : MonoBehaviour
 
         }
 
-        if (hitsDone >= hitsNeeded)
+        if (hitsDone >= hitsNeeded && !hitCheckDone)
         {
-            lineSprite.sprite = completedSprite;
+            hitCheckDone = true;
+            BeatManager.beatInstance.PerfectHit();
         }
 
         if (noteEnd.transform.position.x - (buttonPosX - 0.6f) <= 0 && !hitCheckDone)
@@ -89,7 +88,7 @@ public class SmashNote : MonoBehaviour
         if (collision.tag == "Button")
         {
             canBePressed = true;
-            BeatManager.beatInstance.SmashFeedback();
+            //BeatManager.beatInstance.SmashFeedback();
         }
     }
 

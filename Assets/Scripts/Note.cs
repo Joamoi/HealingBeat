@@ -7,6 +7,8 @@ public class Note : MonoBehaviour
     public bool canBePressed;
     public KeyCode keyToPress1;
     public KeyCode keyToPress2;
+    public KeyCode keyNotToPress1;
+    public KeyCode keyNotToPress2;
 
     public float travelDistance;
     public float buttonPosX;
@@ -34,7 +36,13 @@ public class Note : MonoBehaviour
         // different distances to button give different accuracy
         if (canBePressed && (Input.GetKeyDown(keyToPress1) || Input.GetKeyDown(keyToPress2)))
         {
-            if (Mathf.Abs(buttonPosX - transform.position.x) > 0.25f)
+            if (Input.GetKey(keyNotToPress1) || Input.GetKey(keyNotToPress2))
+            {
+                BeatManager.beatInstance.Miss();
+                Destroy(gameObject);
+            }
+
+            else if (Mathf.Abs(buttonPosX - transform.position.x) > 0.25f)
             {
                 BeatManager.beatInstance.GoodHit();
                 Destroy(gameObject);

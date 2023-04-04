@@ -102,6 +102,8 @@ MonoBehaviour:
   canBePressed: 0
   keyToPress1: 97
   keyToPress2: 276
+  keyNotToPress1: 100
+  keyNotToPress2: 275
   travelDistance: 10
   buttonPosX: -3.4
   beatOfThisNote: 0

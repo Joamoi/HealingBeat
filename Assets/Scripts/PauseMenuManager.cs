@@ -83,6 +83,11 @@ public class PauseMenuManager : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "WorldScene" || SceneManager.GetActiveScene().name == "XTESTWorld")
         {
             WalkManager.walkInstance.gameIsPaused = true;
+
+            if (WalkManager.walkInstance.moveTextInUse)
+            {
+                WalkManager.walkInstance.moveText.SetActive(false);
+            }
         }
 
         else
@@ -100,6 +105,11 @@ public class PauseMenuManager : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "WorldScene" || SceneManager.GetActiveScene().name == "XTESTWorld")
         {
             WalkManager.walkInstance.gameIsPaused = false;
+
+            if (WalkManager.walkInstance.moveTextInUse)
+            {
+                WalkManager.walkInstance.moveText.SetActive(true);
+            }
         }
 
         else

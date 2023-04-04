@@ -122,8 +122,10 @@ public class WalkManager : MonoBehaviour
     public GameObject rightBunnyText;
     private GameObject[] bunnyTexts = new GameObject[2];
     public GameObject moveText;
+    public GameObject takeYourTimeText;
+    [HideInInspector]
+    public bool moveTextInUse = false;
     private int rhythmSteps = 0;
-    private bool rhythmStepsDone = false;
 
     // create list of all npcs in the world and store them in progress manager
     private void Awake()
@@ -150,6 +152,7 @@ public class WalkManager : MonoBehaviour
         else
         {
             moveText.SetActive(true);
+            moveTextInUse = true;
         }
 
         progressManager.previousScene = "WorldScene";
@@ -159,6 +162,7 @@ public class WalkManager : MonoBehaviour
             transform.position = bossRespawnPos.position;
             bossWall.SetActive(false);
             moveText.SetActive(false);
+            moveTextInUse = false;
         }
     }
 
@@ -247,22 +251,6 @@ public class WalkManager : MonoBehaviour
         float moveHori = Input.GetAxisRaw("Horizontal");
         float moveVert = Input.GetAxisRaw("Vertical");
 
-        // NPC BATTLE
-
-        if (battleOn && canHit)
-        {
-            if (moveHori != 0)
-            {
-                CheckBattleHit(moveHori);
-            }
-        }
-
-        // re-enable battle hits after releasing movement buttons
-        if (moveHori == 0f && moveVert == 0f && battleOn)
-        {
-            canHit = true;
-        }
-
         // MOVE
 
         // check hori and vert movement separately to disable diagonal movement
@@ -281,6 +269,22 @@ public class WalkManager : MonoBehaviour
         if (moveHori == 0f && moveVert == 0f && !battleOn)
         {
             canMove = true;
+        }
+
+        // NPC BATTLE
+
+        if (battleOn && canHit)
+        {
+            if (moveHori != 0)
+            {
+                CheckBattleHit(moveHori);
+            }
+        }
+
+        // re-enable battle hits after releasing movement buttons
+        if (moveHori == 0f && moveVert == 0f && battleOn)
+        {
+            canHit = true;
         }
     }
 
@@ -381,10 +385,10 @@ public class WalkManager : MonoBehaviour
                     }
 
                     rhythmSteps++;
-                    if (rhythmSteps > 2 && !rhythmStepsDone)
+                    if (rhythmSteps > 2 && moveTextInUse)
                     {
                         moveText.SetActive(false);
-                        rhythmStepsDone = true;
+                        moveTextInUse = false;
                     }
                 }
 
@@ -468,6 +472,7 @@ public class WalkManager : MonoBehaviour
         rightBunnyText.SetActive(false);
         leftBunnyGlow.SetActive(false);
         rightBunnyGlow.SetActive(false);
+        takeYourTimeText.SetActive(false);
 
         int randomBunny = Random.Range(0, 2);
 
@@ -480,6 +485,7 @@ public class WalkManager : MonoBehaviour
         if (progressManager.npcsAmount == progressManager.npcsLeft)
         {
             bunnyTexts[randomBunny].SetActive(true);
+            takeYourTimeText.SetActive(true);
         }
 
         bunnyValue = bunnyValues[randomBunny];
@@ -561,6 +567,7 @@ public class WalkManager : MonoBehaviour
         rightBunnyText.SetActive(false);
         leftBunnyGlow.SetActive(false);
         rightBunnyGlow.SetActive(false);
+        takeYourTimeText.SetActive(false);
 
         StartCoroutine("EndBattle");
     }
@@ -679,5 +686,6 @@ public class WalkManager : MonoBehaviour
         startTutorial.SetActive(false);
         WalkManager.walkInstance.playerStopped = false;
         moveText.SetActive(true);
+        moveTextInUse = true;
     }
 }

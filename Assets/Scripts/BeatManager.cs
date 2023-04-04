@@ -43,6 +43,7 @@ public class BeatManager : MonoBehaviour
     public GameObject rightNotePrefab;
     public GameObject smashNotePrefab;
     public ParticleSystem comboParticle;
+    public ParticleSystem perfectSparkle;
     public float smashHitsNeeded = 50f;
 
     [HideInInspector]
@@ -166,7 +167,9 @@ public class BeatManager : MonoBehaviour
             // start new timed feedback
             if (nextFeedbackIndex < timedFeedbacks.Count && timedFeedbacks[nextFeedbackIndex] <= songPosInBeats + beatsShownInAdvance)
             {
-                feedbackText.color = new Color32(0, 255, 0, 255);
+                feedbackText.gameObject.SetActive(false);
+                feedbackText.outlineColor = new Color32(0, 255, 0, 255);
+                feedbackText.gameObject.SetActive(true);
                 feedbackText.text = timedFeedbackTexts[nextFeedbackIndex];
 
                 nextFeedbackIndex++;
@@ -207,8 +210,11 @@ public class BeatManager : MonoBehaviour
         StartCoroutine("Flash");
 
         pointsText.text = "" + points.ToString();
-        feedbackText.color = new Color(255, 0, 255);
+        feedbackText.gameObject.SetActive(false);
+        feedbackText.outlineColor = new Color32(255, 247, 0, 255);
+        feedbackText.gameObject.SetActive(true);
         feedbackText.text = "Perfect";
+        perfectSparkle.Play();
         comboText.text = "" + combo;
     }
 
@@ -221,7 +227,9 @@ public class BeatManager : MonoBehaviour
         StartCoroutine("Flash");
 
         pointsText.text = "" + points.ToString();
-        feedbackText.color = new Color(0, 0, 255);
+        feedbackText.gameObject.SetActive(false);
+        feedbackText.outlineColor = new Color32(0, 255, 153, 255);
+        feedbackText.gameObject.SetActive(true);
         feedbackText.text = "Great";
         comboText.text = "" + combo;
     }
@@ -235,7 +243,9 @@ public class BeatManager : MonoBehaviour
         StartCoroutine("Flash");
 
         pointsText.text = "" + points.ToString();
-        feedbackText.color = new Color(255, 255, 0);
+        feedbackText.gameObject.SetActive(false);
+        feedbackText.outlineColor = new Color32(0, 225, 255, 255);
+        feedbackText.gameObject.SetActive(true);
         feedbackText.text = "Good";
         comboText.text = "" + combo;
     }
@@ -245,7 +255,9 @@ public class BeatManager : MonoBehaviour
         combo = 0;
         misses++;
 
-        feedbackText.color = new Color(255, 0, 0);
+        feedbackText.gameObject.SetActive(false);
+        feedbackText.outlineColor = new Color32(255, 0, 0, 255);
+        feedbackText.gameObject.SetActive(true);
         feedbackText.text = "Miss";
         comboText.text = "" + combo;
 
@@ -266,7 +278,9 @@ public class BeatManager : MonoBehaviour
         combo = 0;
         misses++;
 
-        feedbackText.color = new Color(255, 0, 0);
+        feedbackText.gameObject.SetActive(false);
+        feedbackText.outlineColor = new Color32(255, 0, 0, 255);
+        feedbackText.gameObject.SetActive(true);
         feedbackText.text = "Fail";
         comboText.text = "" + combo;
 
@@ -301,9 +315,10 @@ public class BeatManager : MonoBehaviour
 
     public void SmashFeedback()
     {
-        pointsText.text = "" + points.ToString();
-        feedbackText.color = new Color32(0, 255, 0, 255);
-        feedbackText.text = "";
+        feedbackText.gameObject.SetActive(false);
+        feedbackText.outlineColor = new Color32(255, 247, 0, 255);
+        feedbackText.gameObject.SetActive(true);
+        feedbackText.text = "SMASH";
     }
 
     public void HideFeedback()
@@ -442,14 +457,17 @@ public class BeatManager : MonoBehaviour
             beat += 2;
         }
 
-        // solo part
+        // solo
         SoloMelody();
-
+        timedFeedbacks.Add(beat);
+        timedFeedbackTexts.Add("HIT LEFT / RIGHT FAST");
         smashNotes.Add(beat);
+
         beat += 8;
 
         SoloMelody();
-
+        timedFeedbacks.Add(beat);
+        timedFeedbackTexts.Add("HIT LEFT / RIGHT FAST");
         smashNotes.Add(beat);
         beat += 8;
 
@@ -594,13 +612,14 @@ public class BeatManager : MonoBehaviour
         beat++;
         rightNotes.Add(beat);
         beat += 2;
-        leftNotes.Add(beat);
+        //leftNotes.Add(beat);
         beat += 2;
-        rightNotes.Add(beat);
+        //rightNotes.Add(beat);
         beat++;
-        leftNotes.Add(beat);
+        //leftNotes.Add(beat);
         beat += 3;
-        rightNotes.Add(beat);
+        timedFeedbacks.Add(beat);
+        timedFeedbackTexts.Add("");
         beat++;
     }
 }
