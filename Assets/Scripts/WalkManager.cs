@@ -5,6 +5,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering.RendererUtils;
 using UnityEngine.SceneManagement;
+using URPGlitch.Runtime.DigitalGlitch;
 
 public class WalkManager : MonoBehaviour
 {
@@ -36,6 +37,8 @@ public class WalkManager : MonoBehaviour
     public AudioSource jumpSound;
     public AudioSource damageSound;
     public AudioSource bossTransitionSound;
+    public AudioSource bossShout;
+    public AudioSource healFeedbackSound;
     private float originalMusicVol;
     public float musicFadeBossDist = 10f;
 
@@ -90,13 +93,16 @@ public class WalkManager : MonoBehaviour
     private ColorAdjustments colorAdj;
     private ChromaticAberration chroAb;
     private Vignette vignette;
+    private DigitalGlitchVolume digitalGlitch;
     private List<Light> lights = new List<Light>();
     public float lightMultiplier;
     public float bloomThreshold;
     public float postExposure;
     public float chroAbIntensity;
     public float vignetteIntensity;
+    public float glitchIntensity;
     public float lightDuration = 0.15f;
+    public float glitchDuration = 0.15f;
 
     public SpriteRenderer leftBunnyIdle;
     public SpriteRenderer rightBunnyIdle;
@@ -429,6 +435,7 @@ public class WalkManager : MonoBehaviour
         {
             npc.TakeHeal();
             healParticle.Play();
+            healFeedbackSound.Play();
 
             StartCoroutine("PPIntensify");
 
@@ -482,6 +489,7 @@ public class WalkManager : MonoBehaviour
     {
         damageSound.Play();
         hp -= damagePerMiss;
+        StartCoroutine("DamagePP");
 
         if (hp <= 0)
         {
@@ -641,6 +649,25 @@ public class WalkManager : MonoBehaviour
         //colorAdj.postExposure.value -= 0.5f * postExposure;
     }
 
+    IEnumerator DamagePP()
+    {
+        volume.profile.TryGet<DigitalGlitchVolume>(out digitalGlitch);
+
+        digitalGlitch.intensity.value += 0.5f * glitchIntensity;
+
+        yield return new WaitForSeconds(lightDuration / 3f);
+
+        digitalGlitch.intensity.value += 0.5f * glitchIntensity;
+
+        yield return new WaitForSeconds(lightDuration / 3f);
+
+        digitalGlitch.intensity.value -= 0.5f * glitchIntensity;
+
+        yield return new WaitForSeconds(lightDuration / 3f);
+
+        digitalGlitch.intensity.value -= 0.5f * glitchIntensity;
+    }
+
     IEnumerator LightIntensify(Light light)
     {
         float originalIntensity = light.intensity;
@@ -652,11 +679,6 @@ public class WalkManager : MonoBehaviour
         light.intensity -= 0.5f * lightMultiplier * originalIntensity;
         yield return new WaitForSeconds(lightDuration / 3f);
         light.intensity -= 0.5f * lightMultiplier * originalIntensity;
-    }
-
-    public void HealSound()
-    {
-        healSound.Play();
     }
 
     public void OK()

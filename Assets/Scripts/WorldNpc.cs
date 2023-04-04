@@ -76,12 +76,13 @@ public class WorldNpc : MonoBehaviour
         }
 
         WalkManager.walkInstance.BattleOver();
-        WalkManager.walkInstance.HealSound();
+        WalkManager.walkInstance.healSound.Play();
         healSparkle.Play();
 
         if (progressManager.npcsLeft == 0)
         {
             WalkManager.walkInstance.bossWall.SetActive(false);
+            StartCoroutine("BossShout");
         }
     }
 
@@ -101,5 +102,11 @@ public class WorldNpc : MonoBehaviour
         reaction.SetActive(true);
         yield return new WaitForSeconds(3f);
         reaction.SetActive(false);
+    }
+
+    IEnumerator BossShout()
+    {
+        yield return new WaitForSeconds(3f);
+        WalkManager.walkInstance.bossShout.Play();
     }
 }
