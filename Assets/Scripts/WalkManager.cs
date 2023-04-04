@@ -534,7 +534,6 @@ public class WalkManager : MonoBehaviour
 
         yield return new WaitForSeconds(1.8f);
         bossTransitionBackground.SetActive(true);
-        yield return new WaitForSeconds(0.2f);
 
         if (SceneManager.GetActiveScene().name == "WorldScene")
         {
@@ -654,17 +653,11 @@ public class WalkManager : MonoBehaviour
         volume.profile.TryGet<DigitalGlitchVolume>(out digitalGlitch);
 
         digitalGlitch.intensity.value += 0.5f * glitchIntensity;
-
-        yield return new WaitForSeconds(lightDuration / 3f);
-
+        yield return new WaitForSeconds(glitchDuration / 3f);
         digitalGlitch.intensity.value += 0.5f * glitchIntensity;
-
-        yield return new WaitForSeconds(lightDuration / 3f);
-
+        yield return new WaitForSeconds(glitchDuration / 3f);
         digitalGlitch.intensity.value -= 0.5f * glitchIntensity;
-
-        yield return new WaitForSeconds(lightDuration / 3f);
-
+        yield return new WaitForSeconds(glitchDuration / 3f);
         digitalGlitch.intensity.value -= 0.5f * glitchIntensity;
     }
 
