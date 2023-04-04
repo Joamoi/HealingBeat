@@ -14,6 +14,7 @@ public class WorldNpc : MonoBehaviour
     public GameObject hpMask;
     public GameObject hpObject;
     public Animator animator;
+    public ParticleSystem healSparkle;
 
     // check from progressmanager if this npc is already healed or not
     void Start()
@@ -76,6 +77,7 @@ public class WorldNpc : MonoBehaviour
 
         WalkManager.walkInstance.BattleOver();
         WalkManager.walkInstance.HealSound();
+        healSparkle.Play();
 
         if (progressManager.npcsLeft == 0)
         {

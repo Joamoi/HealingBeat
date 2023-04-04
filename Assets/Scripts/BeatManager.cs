@@ -187,7 +187,7 @@ public class BeatManager : MonoBehaviour
 
     IEnumerator StartMusic()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
 
         // record the time when the music starts
         songStartTime = (float)AudioSettings.dspTime;
@@ -442,24 +442,35 @@ public class BeatManager : MonoBehaviour
             beat += 2;
         }
 
+        // solo part
+        SoloMelody();
+
+        smashNotes.Add(beat);
+        beat += 8;
+
+        SoloMelody();
+
+        smashNotes.Add(beat);
+        beat += 8;
+
         // smash notes
-        beat += 8;
-        timedFeedbacks.Add(beat);
-        timedFeedbackTexts.Add("GET READY");
-        beat += 8;
-        timedFeedbacks.Add(beat);
-        timedFeedbackTexts.Add("TO HIT LEFT / RIGHT FAST");
-        beat += 8;
-        smashNotes.Add(beat);
-        beat += 16;
-        timedFeedbacks.Add(beat);
-        timedFeedbackTexts.Add("GET READY");
-        beat += 10;
-        timedFeedbacks.Add(beat);
-        timedFeedbackTexts.Add("TO HIT LEFT / RIGHT FAST");
-        beat += 6;
-        smashNotes.Add(beat);
-        beat += 8;
+        //beat += 8;
+        //timedFeedbacks.Add(beat);
+        //timedFeedbackTexts.Add("GET READY");
+        //beat += 8;
+        //timedFeedbacks.Add(beat);
+        //timedFeedbackTexts.Add("TO HIT LEFT / RIGHT FAST");
+        //beat += 8;
+        //smashNotes.Add(beat);
+        //beat += 16;
+        //timedFeedbacks.Add(beat);
+        //timedFeedbackTexts.Add("GET READY");
+        //beat += 10;
+        //timedFeedbacks.Add(beat);
+        //timedFeedbackTexts.Add("TO HIT LEFT / RIGHT FAST");
+        //beat += 6;
+        //smashNotes.Add(beat);
+        //beat += 8;
 
         // basic melody
         for (int i = 0; i < 2; i++)
@@ -558,5 +569,38 @@ public class BeatManager : MonoBehaviour
         beat++;
         leftNotes.Add(beat);
         beat += 2;
+    }
+
+    void SoloMelody()
+    {
+        beat++;
+        rightNotes.Add(beat);
+        beat += 2;
+        leftNotes.Add(beat);
+        beat++;
+        rightNotes.Add(beat);
+        beat += 3;
+        leftNotes.Add(beat);
+        beat++;
+        rightNotes.Add(beat);
+        beat += 2;
+        leftNotes.Add(beat);
+        beat += 2;
+        leftNotes.Add(beat);
+        beat++;
+        rightNotes.Add(beat);
+        beat++;
+        leftNotes.Add(beat);
+        beat++;
+        rightNotes.Add(beat);
+        beat += 2;
+        leftNotes.Add(beat);
+        beat += 2;
+        rightNotes.Add(beat);
+        beat++;
+        leftNotes.Add(beat);
+        beat += 3;
+        rightNotes.Add(beat);
+        beat++;
     }
 }

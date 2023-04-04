@@ -102,10 +102,13 @@ public class WalkManager : MonoBehaviour
     public SpriteRenderer rightBunnyIdle;
     public SpriteRenderer leftBunny;
     public SpriteRenderer rightBunny;
+    public GameObject leftBunnyGlow;
+    public GameObject rightBunnyGlow;
     public Animator leftBunnyAnimator;
     public Animator rightBunnyAnimator;
     private SpriteRenderer[] bunnies = new SpriteRenderer[2];
     private SpriteRenderer[] idleBunnies = new SpriteRenderer[2];
+    private GameObject[] bunnyGlows = new GameObject[2];
     private float[] bunnyValues = new float[2];
     private float bunnyValue = 0f;
     private GameObject npcObject;
@@ -167,6 +170,7 @@ public class WalkManager : MonoBehaviour
         idleBunnies[0] = rightBunnyIdle; idleBunnies[1] = leftBunnyIdle;
         bunnyValues[0] = -1; bunnyValues[1] = 1;
         bunnyTexts[0] = leftBunnyText; bunnyTexts[1] = rightBunnyText;
+        bunnyGlows[0] = leftBunnyGlow; bunnyGlows[1] = rightBunnyGlow;
         walkTimeCounter = 0;
         walkTimeCheck1 = -99f;
         walkTimeCheck2 = -49f;
@@ -455,12 +459,15 @@ public class WalkManager : MonoBehaviour
         rightBunnyIdle.enabled = false;
         leftBunnyText.SetActive(false);
         rightBunnyText.SetActive(false);
+        leftBunnyGlow.SetActive(false);
+        rightBunnyGlow.SetActive(false);
 
         int randomBunny = Random.Range(0, 2);
 
         yield return new WaitForSeconds(0f);
 
         bunnies[randomBunny].enabled = true;
+        bunnyGlows[randomBunny].SetActive(true);
         //idleBunnies[randomBunny].enabled = true;
         ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
         if (progressManager.npcsAmount == progressManager.npcsLeft)
@@ -545,6 +552,8 @@ public class WalkManager : MonoBehaviour
         rightBunnyIdle.enabled = false;
         leftBunnyText.SetActive(false);
         rightBunnyText.SetActive(false);
+        leftBunnyGlow.SetActive(false);
+        rightBunnyGlow.SetActive(false);
 
         StartCoroutine("EndBattle");
     }
