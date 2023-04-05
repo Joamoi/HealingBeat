@@ -88,6 +88,20 @@ public class PauseMenuManager : MonoBehaviour
             {
                 WalkManager.walkInstance.moveText.SetActive(false);
             }
+
+            ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+            if (progressManager.npcsAmount == progressManager.npcsLeft && WalkManager.walkInstance.battleOn)
+            {
+                WalkManager.walkInstance.leftBunny.enabled = false;
+                WalkManager.walkInstance.rightBunny.enabled = false;
+                WalkManager.walkInstance.leftBunnyIdle.enabled = false;
+                WalkManager.walkInstance.rightBunnyIdle.enabled = false;
+                WalkManager.walkInstance.leftBunnyText.SetActive(false);
+                WalkManager.walkInstance.rightBunnyText.SetActive(false);
+                WalkManager.walkInstance.leftBunnyGlow.SetActive(false);
+                WalkManager.walkInstance.rightBunnyGlow.SetActive(false);
+                WalkManager.walkInstance.takeYourTimeText.SetActive(false);
+            }
         }
 
         else
@@ -109,6 +123,12 @@ public class PauseMenuManager : MonoBehaviour
             if (WalkManager.walkInstance.moveTextInUse)
             {
                 WalkManager.walkInstance.moveText.SetActive(true);
+            }
+
+            ProgressManager progressManager = GameObject.FindGameObjectsWithTag("Progress")[0].GetComponent<ProgressManager>();
+            if (progressManager.npcsAmount == progressManager.npcsLeft && WalkManager.walkInstance.battleOn)
+            {
+                WalkManager.walkInstance.StartRandomBunny();
             }
         }
 
