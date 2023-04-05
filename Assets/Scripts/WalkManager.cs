@@ -688,4 +688,9 @@ public class WalkManager : MonoBehaviour
         moveText.SetActive(true);
         moveTextInUse = true;
     }
+
+    public void StartRandomBunny()
+    {
+        StartCoroutine("RandomBunny");
+    }
 }
