@@ -691,6 +691,7 @@ public class WalkManager : MonoBehaviour
         WalkManager.walkInstance.playerStopped = false;
         moveText.SetActive(true);
         moveTextInUse = true;
+        Cursor.visible = false;
     }
 
     public void StartRandomBunny()
