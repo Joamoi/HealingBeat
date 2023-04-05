@@ -106,7 +106,7 @@ public class WorldNpc : MonoBehaviour
 
     IEnumerator BossShout()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
         WalkManager.walkInstance.bossShout.Play();
     }
 }
