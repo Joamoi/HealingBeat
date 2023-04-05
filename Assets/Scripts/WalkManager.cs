@@ -110,6 +110,7 @@ public class WalkManager : MonoBehaviour
     public SpriteRenderer rightBunny;
     public GameObject leftBunnyGlow;
     public GameObject rightBunnyGlow;
+
     public Animator leftBunnyAnimator;
     public Animator rightBunnyAnimator;
     private SpriteRenderer[] bunnies = new SpriteRenderer[2];
@@ -126,6 +127,7 @@ public class WalkManager : MonoBehaviour
     [HideInInspector]
     public bool moveTextInUse = false;
     private int rhythmSteps = 0;
+    public ParticleSystem perfectSparkle;
 
     // create list of all npcs in the world and store them in progress manager
     private void Awake()
@@ -439,6 +441,8 @@ public class WalkManager : MonoBehaviour
         {
             npc.TakeHeal();
             healParticle.Play();
+            perfectSparkle.gameObject.transform.position = new Vector3(moveHori * 2.5f, 1.4f, 0f);
+            perfectSparkle.Play();
             healFeedbackSound.Play();
 
             StartCoroutine("PPIntensify");
@@ -476,7 +480,7 @@ public class WalkManager : MonoBehaviour
 
         int randomBunny = Random.Range(0, 2);
 
-        yield return new WaitForSeconds(0f);
+        yield return new WaitForSeconds(0.05f);
 
         bunnies[randomBunny].enabled = true;
         bunnyGlows[randomBunny].SetActive(true);
